@@ -1,0 +1,190 @@
+# =============================================================
+# 共通
+# =============================================================
+# OS生成物
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# エディタ / IDE (チームで共有しない個人設定)
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ログ / 一時ファイル
+*.log
+logs/
+tmp/
+*.tmp
+*.bak
+
+# 環境変数 (.env.example だけはコミット対象)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# カバレッジ / テスト結果
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+
+
+# =============================================================
+# バックエンド: Go (webapp/go/)
+# =============================================================
+# ビルド成果物
+webapp/go/webapp
+webapp/go/webapp.exe
+webapp/go/bin/
+*.test
+*.out
+
+# vendor (使う場合のみ)
+webapp/go/vendor/
+
+# Go module の依存ハッシュ (Dockerfile が go mod tidy で生成する方針)
+webapp/go/go.sum
+
+
+# =============================================================
+# バックエンド: Python (webapp/python/)
+# =============================================================
+# バイトコード
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 仮想環境
+.venv/
+venv/
+env/
+ENV/
+
+# パッケージング
+*.egg-info/
+dist/
+build/
+*.egg
+
+# キャッシュ
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.tox/
+
+# Jupyter
+.ipynb_checkpoints/
+
+
+# =============================================================
+# バックエンド: Ruby (webapp/ruby/, Rails 7 API mode)
+# =============================================================
+# Bundler
+webapp/ruby/.bundle/
+webapp/ruby/vendor/bundle/
+
+# Rails ランタイム生成物
+webapp/ruby/tmp/
+webapp/ruby/log/
+webapp/ruby/storage/
+webapp/ruby/public/assets/
+
+# Rails 認証情報 (master.key は絶対にコミットしない)
+webapp/ruby/config/master.key
+webapp/ruby/config/credentials/*.key
+
+# Spring / その他
+*.gem
+.byebug_history
+.rspec_status
+
+
+# =============================================================
+# フロントエンド: 共通 (Node.js)
+# =============================================================
+node_modules/
+
+# パッケージマネージャの中間
+.pnp.*
+.yarn/cache/
+.yarn/install-state.gz
+.yarn/build-state.yml
+.npm/
+
+# デバッグログ
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript インクリメンタルビルド
+*.tsbuildinfo
+
+
+# =============================================================
+# フロントエンド: Next.js (webapp/frontend/next/)
+# =============================================================
+webapp/frontend/next/.next/
+webapp/frontend/next/out/
+webapp/frontend/next/build/
+webapp/frontend/next/.vercel/
+
+
+# =============================================================
+# フロントエンド: Nuxt 3 (webapp/frontend/nuxt/)
+# =============================================================
+webapp/frontend/nuxt/.nuxt/
+webapp/frontend/nuxt/.output/
+webapp/frontend/nuxt/.nitro/
+webapp/frontend/nuxt/.cache/
+webapp/frontend/nuxt/dist/
+
+
+# =============================================================
+# フロントエンド: SvelteKit (webapp/frontend/svelte/)
+# =============================================================
+webapp/frontend/svelte/.svelte-kit/
+webapp/frontend/svelte/build/
+webapp/frontend/svelte/package/
+webapp/frontend/svelte/dist/
+
+
+# =============================================================
+# Docker / インフラ
+# =============================================================
+# ローカル上書き用 (チーム外個別調整)
+docker-compose.override.yml
+
+
+# =============================================================
+# Claude Code
+# =============================================================
+# プロジェクトローカル設定 (各メンバーごとに permission 設定が違うため)
+.claude/settings.local.json
+
+
+# =============================================================
+# GitHub Copilot
+# =============================================================
+# Copilot Chat / Edits / Workspace の作業データ・ログ
+.copilot/
+.copilot-chat/
+copilot-debug.log
+*.copilot.log
+*.copilot-chat
+
+# Copilot CLI セッション (通常はユーザホームに保存されるが念のため)
+.copilot-cli/
+
+# 注: 以下は「共有して全員のCopilot応答を揃える」ためのファイルなので、
+#     除外しないこと。誤って ignore した場合はここで明示的に取り消す。
+#   - .github/copilot-instructions.md  (Copilotへのプロジェクト指示)
+#   - .copilotignore                   (Copilotに見せないコード指定)
+!.github/copilot-instructions.md
+!.copilotignore

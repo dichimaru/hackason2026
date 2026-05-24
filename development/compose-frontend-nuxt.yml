@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      context: ../webapp/frontend/nuxt
+      dockerfile: Dockerfile
+    image: cleaning-frontend-nuxt
+    container_name: cleaning-frontend
+    expose:
+      - "3000"

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where.exe make *)",
+      "Bash(where.exe task *)"
+    ]
+  }
+}

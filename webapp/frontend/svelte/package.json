@@ -1,0 +1,19 @@
+{
+  "name": "cleaning-frontend-svelte",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --host 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "start": "HOST=0.0.0.0 PORT=3000 node build"
+  },
+  "dependencies": {
+    "@sveltejs/adapter-node": "5.2.9",
+    "@sveltejs/kit": "2.8.4",
+    "@sveltejs/vite-plugin-svelte": "4.0.2",
+    "svelte": "5.2.7",
+    "vite": "5.4.11"
+  }
+}

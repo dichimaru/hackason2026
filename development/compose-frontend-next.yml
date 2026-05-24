@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      context: ../webapp/frontend/next
+      dockerfile: Dockerfile
+    image: cleaning-frontend-next
+    container_name: cleaning-frontend
+    expose:
+      - "3000"

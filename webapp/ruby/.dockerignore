@@ -1,0 +1,5 @@
+.git
+README.md
+log/*
+tmp/*
+Gemfile.lock

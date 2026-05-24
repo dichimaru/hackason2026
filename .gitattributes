@@ -1,0 +1,60 @@
+# 規定: 全テキストファイルは LF で扱う。
+# ワークツリーも LF、リポジトリも LF。
+# Windows ユーザの core.autocrlf 設定に左右されない。
+* text=auto eol=lf
+
+# --- ソースコード (LF) ---
+*.go       text eol=lf
+*.py       text eol=lf
+*.rb       text eol=lf
+*.ts       text eol=lf
+*.tsx      text eol=lf
+*.js       text eol=lf
+*.jsx      text eol=lf
+*.mjs      text eol=lf
+*.vue      text eol=lf
+*.svelte   text eol=lf
+*.sql      text eol=lf
+*.sh       text eol=lf
+
+# --- 設定 / ドキュメント (LF) ---
+*.md       text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.json     text eol=lf
+*.toml     text eol=lf
+*.html     text eol=lf
+*.css      text eol=lf
+*.scss     text eol=lf
+*.env*     text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.dockerignore  text eol=lf
+Dockerfile* text eol=lf
+Makefile    text eol=lf
+Gemfile     text eol=lf
+Rakefile    text eol=lf
+config.ru   text eol=lf
+
+# --- Windows スクリプト (CRLF) ---
+*.bat      text eol=crlf
+*.cmd      text eol=crlf
+*.ps1      text eol=crlf
+
+# --- バイナリ (変換しない) ---
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.ico      binary
+*.webp     binary
+*.svg      text eol=lf
+*.pdf      binary
+*.zip      binary
+*.gz       binary
+*.tar      binary
+*.woff     binary
+*.woff2    binary
+*.ttf      binary
+*.otf      binary
+*.eot      binary

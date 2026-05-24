@@ -1,0 +1,18 @@
+services:
+  webapp:
+    build:
+      context: ../webapp/ruby
+      dockerfile: Dockerfile
+    image: cleaning-webapp-ruby
+    container_name: cleaning-webapp
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_USER: cleaning
+      DB_PASS: cleaning
+      DB_NAME: cleaning
+    expose:
+      - "8080"
+    depends_on:
+      db:
+        condition: service_healthy

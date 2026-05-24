@@ -1,0 +1,64 @@
+# Taskfile (https://taskfile.dev)
+# 使い方:
+#   task up                # 既定 (BACKEND=go FRONTEND=next)
+#   task up BACKEND=python FRONTEND=nuxt
+#   task down
+#   task logs
+#   task seed
+#
+# Make派でない人向けのショートカット。中身はMakefileと等価。
+version: "3"
+
+vars:
+  BACKEND: '{{default "go" .BACKEND}}'
+  FRONTEND: '{{default "next" .FRONTEND}}'
+  DEV_DIR: development
+  PROJECT: cleaning
+
+env:
+  COMPOSE_FILES: "-f {{.DEV_DIR}}/compose-base.yml -f {{.DEV_DIR}}/compose-backend-{{.BACKEND}}.yml -f {{.DEV_DIR}}/compose-frontend-{{.FRONTEND}}.yml"
+
+tasks:
+  default:
+    cmds:
+      - task: help
+
+  help:
+    cmds:
+      - echo "Targets: up | down | restart | build | logs | ps | seed | nuke"
+      - echo "Vars:    BACKEND={go|python|ruby}  FRONTEND={next|nuxt|svelte}"
+      - echo "Current: BACKEND={{.BACKEND}} FRONTEND={{.FRONTEND}}"
+
+  up:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} up -d --build
+
+  build:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} build
+
+  down:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} down --remove-orphans
+
+  restart:
+    cmds:
+      - task: down
+      - task: up
+
+  logs:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} logs -f --tail=200
+
+  ps:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} ps
+
+  seed:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} down -v
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} up -d
+
+  nuke:
+    cmds:
+      - docker compose $COMPOSE_FILES -p {{.PROJECT}} down -v --rmi local --remove-orphans

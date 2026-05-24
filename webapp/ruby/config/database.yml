@@ -1,0 +1,16 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV.fetch("DB_USER") { "cleaning" } %>
+  password: <%= ENV.fetch("DB_PASS") { "cleaning" } %>
+  host:     <%= ENV.fetch("DB_HOST") { "db" } %>
+  port:     <%= ENV.fetch("DB_PORT") { 3306 } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME") { "cleaning" } %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME") { "cleaning" } %>

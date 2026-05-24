@@ -1,0 +1,19 @@
+services:
+  webapp:
+    build:
+      context: ../webapp/go
+      dockerfile: Dockerfile
+    image: cleaning-webapp-go
+    container_name: cleaning-webapp
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_USER: cleaning
+      DB_PASS: cleaning
+      DB_NAME: cleaning
+      PORT: "8080"
+    expose:
+      - "8080"
+    depends_on:
+      db:
+        condition: service_healthy
