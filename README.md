@@ -54,7 +54,7 @@ MySQL コンテナの `/docker-entrypoint-initdb.d` にマウントされ初回�
 
 #### バックエンド (3言語)
 
-すべて `/api/health` `/api/employees` `/api/areas` `/api/duties` `/api/duties/generate` を公開。各言語で「最もメジャーな Web フレームワーク」を採用し、それぞれの**標準的なフォルダ構成**に合わせています。詳細は各 README を参照。
+すべて `/api/health` `/api/employees` `/api/areas` `/api/duties` `/api/duties/generate` を公開。各言語でWeb フレームワークを採用し、それぞれの**標準的なフォルダ構成**に合わせています。詳細は各 README を参照。
 
 ```
 webapp/go/                            # Gin + database/sql  → webapp/go/README.md
@@ -329,10 +329,10 @@ docker compose -f development/compose-base.yml \
   公平性の強化やスケジュール連携はここを起点に拡張。
 
 ## 次のステップ (実装の伸ばし方)
-
-- [ ] 代理申請 (`swap_requests`) のCRUDエンドポイントを追加
 - [ ] 当番状態 (`pending` → `done`) を更新するAPI
 - [ ] 通知 (メール/Slack) 連携
 - [ ] レポート/ダッシュボード集計 (完了率、社員別頻度)
 - [ ] 認証 (社内SSO / OIDC) の組み込み
 - [ ] フロントの状態管理ライブラリ (TanStack Query 等) 導入
+## 参考資料
+- [機能一覧](https://docs.google.com/spreadsheets/d/1-29wuKeMmVg6Gu3cdoodapO5eMVD_kYcFn3enIEWSuU/edit?gid=0#gid=0)
