@@ -9,7 +9,7 @@
 | ストレージエンジン | InnoDB |
 | タイムゾーン | `Asia/Tokyo` (db コンテナの `TZ`) |
 | 定義ファイル | `webapp/sql/0_schema.sql` (スキーマ) / `webapp/sql/1_seed.sql` (初期データ) |
-| 関連ドキュメント | [基本設計書](./basic-design.md) / [実装手順書](./implementation-guide.md) |
+| 関連ドキュメント | [基本設計書](./basic-design.md) / [API 仕様書](./api-spec.md) / [実装手順書](./implementation-guide.md) |
 
 DDL は MySQL 公式イメージの `/docker-entrypoint-initdb.d` にマウントされ、**DB ボリュームが空の初回起動時のみ**自動実行される。再投入は `make seed` (volume 削除 → 再 up)。
 

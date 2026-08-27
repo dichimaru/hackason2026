@@ -6,7 +6,7 @@
 | 目的 | 30名規模のオフィスにおける掃除当番の割当・可視化 |
 | 位置づけ | ハッカソン用プロトタイプ雛形。Docker Compose で一発起動できる開発環境を提供する |
 | 採用技術スタック | **バックエンド: Go (Gin + GORM) / フロントエンド: Next.js (React)** — 2026-08-27 決定 |
-| 関連ドキュメント | [実装手順書](./implementation-guide.md) / [Go の書き方入門](./go-guide.md) / [テーブル定義書](./table-definition.md) / [README](../README.md) |
+| 関連ドキュメント | [API 仕様書](./api-spec.md) / [実装手順書](./implementation-guide.md) / [Go の書き方入門](./go-guide.md) / [テーブル定義書](./table-definition.md) / [README](../README.md) |
 | デザイン | [Figma: 掃除当番抽選アプリ](https://www.figma.com/design/e32i2DHHXEFeU8X15bmHbX/%E6%8E%83%E9%99%A4%E5%BD%93%E7%95%AA%E6%8A%BD%E9%81%B8%E3%82%A2%E3%83%97%E3%83%AA?node-id=0-1&m=dev&t=FIzCNAGSJpc7yaOB-1) |
 
 ---
@@ -188,6 +188,9 @@ docker compose \
 ---
 
 ## 4. API 設計
+
+本節は設計判断の記録である。**リクエスト/レスポンスの詳細な仕様は [API 仕様書](./api-spec.md) を一次情報とする**
+(エラー形式、ステータスコードの使い分け、未確定事項、検討中の API も同文書にまとめている)。
 
 - ベース URL: `http://localhost:8080/api`
 - リクエスト / レスポンスとも `application/json` (UTF-8)

@@ -23,6 +23,7 @@ ISUCON14 風に **Docker Compose で一発起動** できるよう構成して�
 | 実装手順書 (まずこれ) | [docs/implementation-guide.md](docs/implementation-guide.md) | `docs/implementation-guide.xlsx` |
 | Go の書き方入門 | [docs/go-guide.md](docs/go-guide.md) | `docs/go-guide.xlsx` |
 | 基本設計書 | [docs/basic-design.md](docs/basic-design.md) | `docs/basic-design.xlsx` |
+| API 仕様書 | [docs/api-spec.md](docs/api-spec.md) | `docs/api-spec.xlsx` |
 | テーブル定義書 | [docs/table-definition.md](docs/table-definition.md) | `docs/table-definition.xlsx` |
 
 **md が正**です。`*.xlsx` と `docs/images/*.png` は md から生成した成果物なので、
