@@ -13,6 +13,9 @@ desktop.ini
 *.swo
 *~
 
+# Office (Excel等) が開いている間に作るロックファイル
+~$*
+
 # ログ / 一時ファイル
 *.log
 logs/

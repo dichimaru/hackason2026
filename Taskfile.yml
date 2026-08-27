@@ -5,6 +5,7 @@
 #   task down
 #   task logs
 #   task seed
+#   task docs              # 設計ドキュメント (docs/*.md → xlsx) を再生成
 #
 # Make派でない人向けのショートカット。中身はMakefileと等価。
 version: "3"
@@ -14,6 +15,7 @@ vars:
   FRONTEND: '{{default "next" .FRONTEND}}'
   DEV_DIR: development
   PROJECT: cleaning
+  PYTHON: '{{default "python3" .PYTHON}}'
 
 env:
   COMPOSE_FILES: "-f {{.DEV_DIR}}/compose-base.yml -f {{.DEV_DIR}}/compose-backend-{{.BACKEND}}.yml -f {{.DEV_DIR}}/compose-frontend-{{.FRONTEND}}.yml"
@@ -25,7 +27,7 @@ tasks:
 
   help:
     cmds:
-      - echo "Targets: up | down | restart | build | logs | ps | seed | nuke"
+      - echo "Targets: up | down | restart | build | logs | ps | seed | nuke | docs"
       - echo "Vars:    BACKEND={go|python|ruby}  FRONTEND={next|nuxt|svelte}"
       - echo "Current: BACKEND={{.BACKEND}} FRONTEND={{.FRONTEND}}"
 
@@ -62,3 +64,19 @@ tasks:
   nuke:
     cmds:
       - docker compose $COMPOSE_FILES -p {{.PROJECT}} down -v --rmi local --remove-orphans
+
+  # docs/*.md が正。xlsx と docs/images/*.png は生成物なので直接編集しない。
+  docs:
+    cmds:
+      - task: docs-figures
+      - task: docs-xlsx
+
+  # md → xlsx (Python 標準ライブラリのみ。Node.js 不要)
+  docs-xlsx:
+    cmds:
+      - "{{.PYTHON}} docs/tools/md2xlsx.py"
+
+  # md 内の mermaid → PNG (Node.js 必要。初回のみ mermaid-cli を取得)
+  docs-figures:
+    cmds:
+      - "{{.PYTHON}} docs/tools/render_mermaid.py"

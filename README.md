@@ -5,9 +5,51 @@ ISUCON14 風に **Docker Compose で一発起動** できるよう構成して�
 **バックエンド3 (Go / Python / Ruby) × フロントエンド3 (Next.js / Nuxt / SvelteKit) = 9通り** を
 ビルド時オプションで切り替えられます。
 
+> **採用技術スタックは Go + Next.js に決定しました (2026-08-27)。**
+> `make up` の既定値がこの組み合わせなので、通常は `BACKEND` / `FRONTEND` の指定は不要です。
+> 他の7通りは技術比較用の参考実装として残してあります。詳細は
+> [基本設計書](docs/basic-design.md) を参照してください。
+
 ## デザイン / ワイヤーフレーム
 
 - Figma: [掃除当番抽選アプリ](https://www.figma.com/design/e32i2DHHXEFeU8X15bmHbX/%E6%8E%83%E9%99%A4%E5%BD%93%E7%95%AA%E6%8A%BD%E9%81%B8%E3%82%A2%E3%83%97%E3%83%AA?node-id=0-1&m=dev&t=FIzCNAGSJpc7yaOB-1)
+
+## 設計ドキュメント
+
+| ドキュメント | 編集用 (こちらが正) | 閲覧用 |
+|--------------|--------------------|--------|
+| テーブル定義書 | [docs/table-definition.md](docs/table-definition.md) | `docs/table-definition.xlsx` |
+| 基本設計書 | [docs/basic-design.md](docs/basic-design.md) | `docs/basic-design.xlsx` |
+
+**md が正**です。`*.xlsx` と `docs/images/*.png` は md から生成した成果物なので、
+**直接編集しないでください** (次の再生成で上書きされます)。生成物もリポジトリにコミットしてあるので、
+閲覧だけなら何も生成する必要はありません。
+
+md を編集したら再生成します。
+
+```bash
+make docs           # mermaid図(PNG) → xlsx をまとめて再生成
+make docs-xlsx      # xlsx のみ再生成 (Node.js 不要)
+make docs-figures   # md 内の mermaid を PNG に再生成
+```
+
+| 生成物 | 生成元 | 必要なもの |
+|--------|--------|-----------|
+| `docs/*.xlsx` | `docs/*.md` | Python 3 (標準ライブラリのみ / 追加インストール不要) |
+| `docs/images/*.png` | md 内の `mermaid` ブロック | Node.js (初回のみ mermaid-cli を取得) |
+
+`python3` が無い環境 (Windows など) では `make docs PYTHON=python` のように指定します。
+
+xlsx では mermaid を描画できないため、図は事前に PNG 化して埋め込んでいます。md 側で
+mermaid ブロックの直後に次の1行を置くと、その PNG の生成先と埋め込み先になります
+(HTML コメントなので GitHub の表示には出ず、mermaid は図として表示されたままです)。
+
+```markdown
+<!-- xlsx-image: images/er-diagram.png -->
+```
+
+手描きの図やキャプチャを載せたい場合は、画像を `docs/images/` に置いて md から
+`![説明](images/xxx.png)` で参照すれば、同じく xlsx に埋め込まれます。
 
 ## 構成
 
@@ -19,6 +61,7 @@ hackason2026/
 ├── Makefile / Taskfile.yml           # 起動ショートカット
 ├── .env.example
 ├── .claude/                          # Claude Code 設定
+├── docs/                             # 設計ドキュメント (md が正 / xlsx は閲覧用の生成物)
 ├── development/                      # 起動側 (compose / nginx 設定)
 └── webapp/                           # アプリ側 (バックエンド3 + フロント3 + DB)
 ```
@@ -263,6 +306,9 @@ curl -X POST http://localhost:8080/api/duties/generate
 ### 4. 日常操作
 
 ```bash
+make up                  # 採用スタック (Go + Next.js) で起動
+
+# 以下は参考実装を試すとき用 (通常の開発では使いません)
 make up BACKEND=python FRONTEND=nuxt   # 組み合わせを変えて起動
 make up BACKEND=ruby   FRONTEND=svelte
 
@@ -316,6 +362,10 @@ docker compose -f development/compose-base.yml \
 
 すべて同じ Nginx 設定・同じ DB スキーマ・同じ API 仕様で動きます。
 チームで好きな組み合わせを試して、開発体験や性能を比較できます。
+
+> **このうち `go` + `next` を採用します (2026-08-27 決定)。**
+> 残りの8通りは比較検証用の参考実装です。設計書は Go + Next.js のみを対象に記述しており、
+> 参考実装側は変更に追随しないため、次第に古くなる前提で扱ってください。
 
 ## 設計上のポイント
 

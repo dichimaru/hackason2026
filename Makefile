@@ -8,6 +8,7 @@
 #   make logs
 #   make seed                         # DBを再初期化 (volume削除 → 再up)
 #   make ps
+#   make docs                         # 設計ドキュメント (docs/*.md → xlsx) を再生成
 #
 # 起動後:
 #   http://localhost:8080         アプリ (Nginx → frontend/api)
@@ -15,6 +16,8 @@
 
 BACKEND  ?= go
 FRONTEND ?= next
+# Windows など python3 が無い環境では: make docs PYTHON=python
+PYTHON   ?= python3
 
 DEV_DIR := development
 COMPOSE := docker compose \
@@ -23,10 +26,10 @@ COMPOSE := docker compose \
   -f $(DEV_DIR)/compose-frontend-$(FRONTEND).yml \
   -p cleaning
 
-.PHONY: up down restart build logs ps seed nuke check-stack help
+.PHONY: up down restart build logs ps seed nuke check-stack docs docs-xlsx docs-figures help
 
 help:
-	@echo "Targets: up / down / restart / build / logs / ps / seed / nuke"
+	@echo "Targets: up / down / restart / build / logs / ps / seed / nuke / docs"
 	@echo "Vars:    BACKEND={go|python|ruby}  FRONTEND={next|nuxt|svelte}"
 	@echo "Current: BACKEND=$(BACKEND)  FRONTEND=$(FRONTEND)"
 
@@ -59,3 +62,15 @@ seed:
 # 全イメージ・ボリューム・コンテナを破棄 (注意: 不可逆)
 nuke:
 	$(COMPOSE) down -v --rmi local --remove-orphans
+
+# --- 設計ドキュメント ---------------------------------------------------
+# docs/*.md が正。xlsx と docs/images/*.png は生成物なので直接編集しない。
+docs: docs-figures docs-xlsx
+
+# md → xlsx (Python 標準ライブラリのみ。Node.js 不要)
+docs-xlsx:
+	$(PYTHON) docs/tools/md2xlsx.py
+
+# md 内の mermaid → PNG (Node.js 必要。初回のみ mermaid-cli を取得)
+docs-figures:
+	$(PYTHON) docs/tools/render_mermaid.py

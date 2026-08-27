@@ -50,6 +50,7 @@ config.ru   text eol=lf
 *.webp     binary
 *.svg      text eol=lf
 *.pdf      binary
+*.xlsx     binary
 *.zip      binary
 *.gz       binary
 *.tar      binary
