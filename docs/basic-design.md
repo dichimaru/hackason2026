@@ -5,8 +5,8 @@
 | システム名 | 社内掃除当番アプリ (hackason2026) |
 | 目的 | 30名規模のオフィスにおける掃除当番の割当・可視化 |
 | 位置づけ | ハッカソン用プロトタイプ雛形。Docker Compose で一発起動できる開発環境を提供する |
-| 採用技術スタック | **バックエンド: Go (Gin) / フロントエンド: Next.js (React)** — 2026-08-27 決定 |
-| 関連ドキュメント | [テーブル定義書](./table-definition.md) / [README](../README.md) |
+| 採用技術スタック | **バックエンド: Go (Gin + GORM) / フロントエンド: Next.js (React)** — 2026-08-27 決定 |
+| 関連ドキュメント | [実装手順書](./implementation-guide.md) / [Go の書き方入門](./go-guide.md) / [テーブル定義書](./table-definition.md) / [README](../README.md) |
 | デザイン | [Figma: 掃除当番抽選アプリ](https://www.figma.com/design/e32i2DHHXEFeU8X15bmHbX/%E6%8E%83%E9%99%A4%E5%BD%93%E7%95%AA%E6%8A%BD%E9%81%B8%E3%82%A2%E3%83%97%E3%83%AA?node-id=0-1&m=dev&t=FIzCNAGSJpc7yaOB-1) |
 
 ---
@@ -15,7 +15,7 @@
 
 社員マスタと掃除エリアマスタをもとに、翌週5日分の掃除当番をランダムに抽選・登録し、一覧表示する Web アプリケーション。
 
-技術スタックは **バックエンド Go (Gin) + フロントエンド Next.js (React)** を採用する (2026-08-27 決定)。以降の設計はこの組み合わせを前提に記述する。
+技術スタックは **バックエンド Go (Gin + GORM) + フロントエンド Next.js (React)** を採用する (2026-08-27 決定)。以降の設計はこの組み合わせを前提に記述する。
 
 本リポジトリは元々、同一の API 仕様・同一の DB スキーマに対してバックエンド3言語 × フロントエンド3フレームワークの計9通りを差し替えて起動できる雛形として作られており、採用しなかった実装 (Python / Ruby / Nuxt / SvelteKit) もコードとして残っている。これらは技術比較のための参考実装として扱い、本設計書の対象外とする。
 
@@ -65,7 +65,7 @@
 | サービス | イメージ / ビルド元 | 公開ポート | 役割 |
 |----------|--------------------|-----------|------|
 | `nginx` | `nginx:1.27-alpine` | `8080:80` | リバースプロキシ。`/api/` をバックエンド、それ以外をフロントへ振り分ける |
-| `webapp` | `webapp/go` | 内部 `8080` (expose) | API サーバ (Go + Gin) |
+| `webapp` | `webapp/go` | 内部 `8080` (expose) | API サーバ (Go + Gin + GORM) |
 | `frontend` | `webapp/frontend/next` | 内部 `3000` (expose) | 画面 (Next.js) |
 | `db` | `mysql:8.0` | `3306:3306` | データストア。初回起動時に `webapp/sql/*.sql` を自動投入 |
 | `adminer` | `adminer:4` | `8081:8080` | DB 管理 UI (開発用) |
@@ -112,7 +112,7 @@ docker compose \
 
 | 層 | 採用 | 備考 |
 |----|------|------|
-| バックエンド | **Go 1.x + Gin + database/sql** (`webapp/go`) | MySQL ドライバは `go-sql-driver/mysql` |
+| バックエンド | **Go 1.22 + Gin v1.10 + GORM v1.31** (`webapp/go`) | ドライバは `gorm.io/driver/mysql` |
 | フロントエンド | **Next.js (React, Pages Router, TypeScript)** (`webapp/frontend/next`) | `/api/*` を相対パスで呼ぶ |
 | データストア | MySQL 8.0 | |
 | リバースプロキシ | Nginx 1.27 | |
@@ -131,8 +131,8 @@ docker compose \
 | ルーティング | `internal/router/` | `/api` 配下のパスとハンドラの対応付け |
 | ハンドラ | `internal/handler/` | リクエスト受け取りと JSON 応答、HTTP ステータスの決定 |
 | サービス | `internal/service/` | 当番生成などのビジネスロジック |
-| リポジトリ | `internal/repository/` | SQL の発行。`employee` / `area` / `duty` の3つ |
-| 型定義 | `internal/domain/model.go` | `Employee` / `Area` / `Duty` |
+| リポジトリ | `internal/repository/` | GORM を使った DB アクセス。`employee` / `area` / `duty` の3つ |
+| モデル / 型定義 | `internal/domain/model.go` | GORM モデル (`Employee` / `Area` / `Duty`) と API 応答用の `DutyView` |
 | 接続・設定 | `internal/db/`, `internal/config/` | MySQL 接続 (リトライ付き)、環境変数の読み込み |
 
 ---
@@ -304,7 +304,8 @@ docker compose \
 
 - `db` は `mysqladmin ping` によるヘルスチェックを持つ (5秒間隔・最大20回・起動猶予30秒)。
 - `webapp` は `depends_on: db (service_healthy)` により、DB が healthy になるまで起動しない。
-- さらに `internal/db` が **2秒間隔で最大30回 (最長60秒) の接続リトライ**を行い、初回起動時の DB 初期化待ちを吸収する。
+- さらに `internal/db` が **2秒間隔で最大30回 (最長60秒) の接続リトライ**を行い、初回起動時の DB 初期化待ちを吸収する
+  (`gorm.Open` 後に `*sql.DB` を取り出して `Ping` している)。
 - `nginx` は `webapp` / `frontend` に依存する (起動順のみ、healthy 待ちはしない)。
 
 ### 5.3 文字コード
@@ -313,7 +314,7 @@ DB・接続文字列とも `utf8mb4` に統一する。日本語データの文�
 
 - MySQL サーバ起動オプション: `--character-set-server=utf8mb4` / `--collation-server=utf8mb4_unicode_ci` / `--skip-character-set-client-handshake`
 - 初期化 SQL 冒頭: `SET NAMES utf8mb4;`
-- 接続 DSN: `charset=utf8mb4&parseTime=true&loc=Local`
+- 接続 DSN: `charset=utf8mb4&parseTime=true&loc=Local` (GORM の `gorm.io/driver/mysql` に渡す)
 
 ### 5.4 性能・可用性
 
@@ -327,7 +328,7 @@ DB・接続文字列とも `utf8mb4` に統一する。日本語データの文�
 | 通信の暗号化 | なし (HTTP)。ローカル開発前提 |
 | 資格情報 | DB のユーザ/パスワードは compose ファイルに平文で記述 |
 | DB ポート | `3306` をホストに公開している |
-| SQL インジェクション | すべての SQL でプレースホルダ (`?`) を使用 |
+| SQL インジェクション | GORM のパラメータバインドを使用。`Where("id = ?", id)` のように値は必ず `?` で渡す |
 
 **本番運用にはそのまま適さない**。社内公開する場合は認証の追加、資格情報の外部化、`3306` / `8081` の非公開化が前提となる。
 

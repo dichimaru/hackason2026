@@ -9,6 +9,8 @@ ISUCON14 風に **Docker Compose で一発起動** できるよう構成して�
 > `make up` の既定値がこの組み合わせなので、通常は `BACKEND` / `FRONTEND` の指定は不要です。
 > 他の7通りは技術比較用の参考実装として残してあります。詳細は
 > [基本設計書](docs/basic-design.md) を参照してください。
+> Go / Gin が初めての人は [実装手順書](docs/implementation-guide.md) と
+> [Go の書き方入門](docs/go-guide.md) から読み始めてください。
 
 ## デザイン / ワイヤーフレーム
 
@@ -18,8 +20,10 @@ ISUCON14 風に **Docker Compose で一発起動** できるよう構成して�
 
 | ドキュメント | 編集用 (こちらが正) | 閲覧用 |
 |--------------|--------------------|--------|
-| テーブル定義書 | [docs/table-definition.md](docs/table-definition.md) | `docs/table-definition.xlsx` |
+| 実装手順書 (まずこれ) | [docs/implementation-guide.md](docs/implementation-guide.md) | `docs/implementation-guide.xlsx` |
+| Go の書き方入門 | [docs/go-guide.md](docs/go-guide.md) | `docs/go-guide.xlsx` |
 | 基本設計書 | [docs/basic-design.md](docs/basic-design.md) | `docs/basic-design.xlsx` |
+| テーブル定義書 | [docs/table-definition.md](docs/table-definition.md) | `docs/table-definition.xlsx` |
 
 **md が正**です。`*.xlsx` と `docs/images/*.png` は md から生成した成果物なので、
 **直接編集しないでください** (次の再生成で上書きされます)。生成物もリポジトリにコミットしてあるので、
@@ -100,7 +104,7 @@ MySQL コンテナの `/docker-entrypoint-initdb.d` にマウントされ初回�
 すべて `/api/health` `/api/employees` `/api/areas` `/api/duties` `/api/duties/generate` を公開。各言語でWeb フレームワークを採用し、それぞれの**標準的なフォルダ構成**に合わせています。詳細は各 README を参照。
 
 ```
-webapp/go/                            # Gin + database/sql  → webapp/go/README.md
+webapp/go/                            # Gin + GORM  → webapp/go/README.md
 ├── Dockerfile
 ├── go.mod
 ├── cmd/server/main.go                # エントリポイント

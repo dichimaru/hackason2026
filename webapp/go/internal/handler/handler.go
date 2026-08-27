@@ -1,24 +1,24 @@
 package handler
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"github.com/hackason2026/webapp-go/internal/repository"
 	"github.com/hackason2026/webapp-go/internal/service"
 )
 
 type Handler struct {
-	DB        *sql.DB
+	DB        *gorm.DB
 	Employees repository.EmployeeRepo
 	Areas     repository.AreaRepo
 	Duties    repository.DutyRepo
 	Generator service.DutyGenerator
 }
 
-func New(db *sql.DB) *Handler {
+func New(db *gorm.DB) *Handler {
 	er := repository.EmployeeRepo{DB: db}
 	ar := repository.AreaRepo{DB: db}
 	dr := repository.DutyRepo{DB: db}
@@ -32,7 +32,11 @@ func New(db *sql.DB) *Handler {
 }
 
 func (h *Handler) Health(c *gin.Context) {
-	if err := h.DB.Ping(); err != nil {
+	conn, err := h.DB.DB()
+	if err == nil {
+		err = conn.Ping()
+	}
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "ng", "error": err.Error()})
 		return
 	}

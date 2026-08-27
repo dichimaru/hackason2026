@@ -36,15 +36,21 @@ func (g DutyGenerator) Generate() (int, error) {
 	items := make([]domain.Duty, 0, 5*len(areaIDs))
 	idx := 0
 	for day := 7; day < 12; day++ {
-		date := time.Now().AddDate(0, 0, day).Format("2006-01-02")
+		date := truncateToDate(time.Now()).AddDate(0, 0, day)
 		for _, areaID := range areaIDs {
 			items = append(items, domain.Duty{
 				EmployeeID:    empIDs[idx%len(empIDs)],
 				AreaID:        areaID,
 				ScheduledDate: date,
+				Status:        "pending",
 			})
 			idx++
 		}
 	}
 	return g.Duties.InsertBatch(items)
+}
+
+// truncateToDate は時刻を切り落とす。scheduled_date は DATE 型なので日付だけ渡す。
+func truncateToDate(t time.Time) time.Time {
+	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 }

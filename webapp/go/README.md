@@ -1,6 +1,8 @@
 # webapp/go — Go (Gin) バックエンド
 
-掃除当番アプリの **Go 実装**。Web フレームワークは [Gin](https://github.com/gin-gonic/gin)、DB は `database/sql` + `go-sql-driver/mysql` で生 SQL を叩く構成。
+掃除当番アプリの **Go 実装**。Web フレームワークは [Gin](https://github.com/gin-gonic/gin)、DB アクセスは [GORM](https://gorm.io/ja_JP/docs/) (`gorm.io/driver/mysql`) を使う。
+
+テーブル定義は `webapp/sql/0_schema.sql` を正とするため、`AutoMigrate` は呼ばない。
 
 ## フォルダ構成
 
@@ -16,13 +18,13 @@ webapp/go/
     ├── config/
     │   └── config.go             # 環境変数の読み込み
     ├── db/
-    │   └── db.go                 # MySQL 接続 + 起動待ちリトライ
+    │   └── db.go                 # GORM 初期化 (MySQL) + 起動待ちリトライ
     ├── domain/
-    │   └── model.go              # Employee / Area / Duty 構造体
+    │   └── model.go              # GORM モデル (Employee / Area / Duty) + DutyView
     ├── repository/
-    │   ├── employee.go           # 社員クエリ
-    │   ├── area.go               # エリアクエリ
-    │   └── duty.go               # 当番クエリ + バッチ挿入
+    │   ├── employee.go           # 社員クエリ (GORM)
+    │   ├── area.go               # エリアクエリ (GORM)
+    │   └── duty.go               # 当番クエリ (Preload) + バッチ挿入
     ├── service/
     │   └── duty_generator.go     # 当番自動割当ロジック
     ├── handler/
@@ -77,9 +79,10 @@ make down                   # 停止
 | やりたいこと                         | 触る場所                                    |
 |--------------------------------------|---------------------------------------------|
 | 新しいエンドポイント追加             | `handler/handler.go` + `router/router.go`   |
-| 新しいテーブル                       | `domain/model.go` + 新しい `repository/*.go` |
+| 新しいテーブル                       | `webapp/sql/0_schema.sql` + `domain/model.go` + 新しい `repository/*.go` |
 | 当番割当ロジックの差し替え           | `service/duty_generator.go`                 |
-| DB 接続プールの調整                  | `db/db.go`                                  |
+| DB 接続プールの調整                  | `db/db.go` (`gdb.DB()` で `*sql.DB` を取得して設定) |
+| 発行される SQL の確認                | `db/db.go` の Logger を `logger.Info` にする |
 | バリデーション導入                   | `go-playground/validator` を `handler` に追加 |
 | OpenAPI ドキュメント                 | `swaggo/swag` の導入を検討                  |
 | 構造化ログ                           | `slog` (stdlib) or `zerolog` に差し替え     |
@@ -88,7 +91,16 @@ make down                   # 停止
 
 ```bash
 cd webapp/go
-DB_HOST=127.0.0.1 go run ./cmd/server
+DB_HOST=127.0.0.1 PORT=8888 go run ./cmd/server
 ```
 
-別途 MySQL を起動しておくこと。
+DB は `make up` で起動している MySQL (ホストの `3306`) をそのまま使える。
+`PORT` を変えているのは、`8080` が Nginx、`8081` が Adminer で埋まっているため。
+この場合フロントからは繋がらないので、`curl http://localhost:8888/api/duties` で直接叩いて確認する。
+
+なお Go をローカルに入れていない場合は、Docker 経由でビルドと静的解析ができる。
+
+```bash
+docker run --rm -v "$PWD":/src -w /src golang:1.22-alpine \
+  sh -c "gofmt -l . && go vet ./... && go build ./..."
+```
