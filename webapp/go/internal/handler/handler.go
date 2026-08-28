@@ -73,7 +73,7 @@ func (h *Handler) ListDuties(c *gin.Context) {
 func (h *Handler) GenerateDuties(c *gin.Context) {
 	created, err := h.Generator.Generate()
 	if err != nil {
-		if err.Error() == "employees or areas is empty" {
+		if err.Error() == "person or task is empty" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}

@@ -8,14 +8,14 @@ import (
 
 type DutyRepo struct{ DB *gorm.DB }
 
-// List は当番一覧を、社員名・エリア名を埋めた API 応答の形で返す。
+// List は抽選結果一覧を、社員名・掃除場所名を埋めた API 応答の形で返す。
 func (r DutyRepo) List() ([]domain.DutyView, error) {
 	duties := []domain.Duty{}
 	err := r.DB.
 		Preload("Employee").
 		Preload("Area").
 		Order("scheduled_date").
-		Order("area_id").
+		Order("task_id").
 		Find(&duties).Error
 	if err != nil {
 		return nil, err
@@ -25,9 +25,9 @@ func (r DutyRepo) List() ([]domain.DutyView, error) {
 	for _, d := range duties {
 		out = append(out, domain.DutyView{
 			ID:            d.ID,
-			EmployeeID:    d.EmployeeID,
+			EmployeeID:    d.PersonID,
 			EmployeeName:  d.Employee.Name,
-			AreaID:        d.AreaID,
+			AreaID:        d.TaskID,
 			AreaName:      d.Area.Name,
 			ScheduledDate: d.ScheduledDate.Format("2006-01-02"),
 			Status:        d.Status,
@@ -36,7 +36,7 @@ func (r DutyRepo) List() ([]domain.DutyView, error) {
 	return out, nil
 }
 
-// InsertBatch は1トランザクションで複数の duty を挿入する。
+// InsertBatch は1トランザクションで複数の抽選結果を挿入する。
 //
 // Omit で関連を外しているのは、ゼロ値の Employee / Area を GORM が
 // 新規レコードとして書き込もうとするのを防ぐため。

@@ -9,7 +9,7 @@ import (
 	"github.com/hackason2026/webapp-go/internal/repository"
 )
 
-// DutyGenerator は翌週5営業日分の当番をシャッフル+ラウンドロビンで割り当てる。
+// DutyGenerator は翌週5日分の掃除当番をシャッフル+ラウンドロビンで割り当てる。
 // 公平性の強化やカレンダー連携はここを起点に拡張する。
 type DutyGenerator struct {
 	Employees repository.EmployeeRepo
@@ -27,7 +27,7 @@ func (g DutyGenerator) Generate() (int, error) {
 		return 0, err
 	}
 	if len(empIDs) == 0 || len(areaIDs) == 0 {
-		return 0, errors.New("employees or areas is empty")
+		return 0, errors.New("person or task is empty")
 	}
 
 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -39,8 +39,8 @@ func (g DutyGenerator) Generate() (int, error) {
 		date := truncateToDate(time.Now()).AddDate(0, 0, day)
 		for _, areaID := range areaIDs {
 			items = append(items, domain.Duty{
-				EmployeeID:    empIDs[idx%len(empIDs)],
-				AreaID:        areaID,
+				PersonID:      empIDs[idx%len(empIDs)],
+				TaskID:        areaID,
 				ScheduledDate: date,
 				Status:        "pending",
 			})

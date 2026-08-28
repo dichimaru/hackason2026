@@ -2,14 +2,14 @@
 SET NAMES utf8mb4;
 USE cleaning;
 
-INSERT INTO areas (id, name, description) VALUES
-  (1, '会議室A',    '机・椅子の整頓、ホワイトボード消去'),
-  (2, '会議室B',    '机・椅子の整頓、プロジェクター電源確認'),
-  (3, '休憩スペース', 'シンク・テーブル拭き、ゴミ捨て'),
-  (4, 'トイレ',     '清掃業者の補助、消耗品確認'),
-  (5, 'エントランス', '床のモップがけ、来客スリッパ整理');
+INSERT INTO task (id, name, office, description) VALUES
+  (1, '会議室A', '東京オフィス', '机・椅子の整頓、ホワイトボード消去'),
+  (2, '給湯室', '東京オフィス', 'シンク・テーブル拭き、ゴミ捨て'),
+  (3, 'エントランス', '東京オフィス', '床のモップがけ、来客スリッパ整理'),
+  (4, 'リフレッシュスペース', '大阪オフィス', 'シンク・テーブル拭き、ゴミ捨て'),
+  (5, 'トイレ', '大阪オフィス', '清掃業者の補助、消耗品確認');
 
-INSERT INTO employees (name, email, department) VALUES
+INSERT INTO person (name, email, department) VALUES
   ('佐藤 一郎',   'sato.ichiro@example.com',    '営業部'),
   ('鈴木 二郎',   'suzuki.jiro@example.com',    '営業部'),
   ('高橋 三郎',   'takahashi.saburo@example.com', '営業部'),
@@ -42,7 +42,7 @@ INSERT INTO employees (name, email, department) VALUES
   ('小川 颯',     'ogawa.hayate@example.com',   '情シス');
 
 -- 直近5営業日 × 5エリア = 25件のラウンドロビン当番割当
-INSERT INTO duties (employee_id, area_id, scheduled_date, status) VALUES
+INSERT INTO lottery_result (person_id, task_id, scheduled_date, status) VALUES
   ( 1, 1, CURDATE() + INTERVAL 0 DAY, 'pending'),
   ( 2, 2, CURDATE() + INTERVAL 0 DAY, 'pending'),
   ( 3, 3, CURDATE() + INTERVAL 0 DAY, 'pending'),

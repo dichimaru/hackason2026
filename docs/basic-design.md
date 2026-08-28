@@ -13,7 +13,7 @@
 
 ## 1. システム概要
 
-社員マスタと掃除エリアマスタをもとに、翌週5日分の掃除当番をランダムに抽選・登録し、一覧表示する Web アプリケーション。
+社員 (`person`) と掃除タスク (`task`) をもとに、翌週5日分の掃除当番をランダムに抽選・登録し、一覧表示する Web アプリケーション。
 
 技術スタックは **バックエンド Go (Gin + GORM) + フロントエンド Next.js (React)** を採用する (2026-08-27 決定)。以降の設計はこの組み合わせを前提に記述する。
 
@@ -131,8 +131,8 @@ docker compose \
 | ルーティング | `internal/router/` | `/api` 配下のパスとハンドラの対応付け |
 | ハンドラ | `internal/handler/` | リクエスト受け取りと JSON 応答、HTTP ステータスの決定 |
 | サービス | `internal/service/` | 当番生成などのビジネスロジック |
-| リポジトリ | `internal/repository/` | GORM を使った DB アクセス。`employee` / `area` / `duty` の3つ |
-| モデル / 型定義 | `internal/domain/model.go` | GORM モデル (`Employee` / `Area` / `Duty`) と API 応答用の `DutyView` |
+| リポジトリ | `internal/repository/` | GORM を使った DB アクセス。`person` / `task` / `lottery_result` に対応 |
+| モデル / 型定義 | `internal/domain/model.go` | GORM モデル (`Employee` / `Area` / `Duty`) と API 応答用の `DutyView`。`Area` は `task` の互換APIモデル |
 | 接続・設定 | `internal/db/`, `internal/config/` | MySQL 接続 (リトライ付き)、環境変数の読み込み |
 
 ---
@@ -153,9 +153,9 @@ docker compose \
 
 `internal/service/duty_generator.go` に実装する (参考実装の Python / Ruby も同一アルゴリズム)。
 
-1. `employees` から `active = 1` の社員 ID を全件取得する。
-2. `areas` から全エリア ID を取得する。
-3. いずれかが空の場合はエラー (`employees or areas is empty`) とし、HTTP 400 を返す。
+1. `person` から `active = 1` の社員 ID を全件取得する。
+2. `task` から全掃除タスク ID を取得する。
+3. いずれかが空の場合はエラー (`person or task is empty`) とし、HTTP 400 を返す。
 4. 社員 ID リストをシャッフルする (乱数シードは実行時刻ベース)。
 5. 実行日の **7日後から11日後まで** の5日間について、日ごとに全エリアを走査し、シャッフル済みリストの先頭から順に (剰余でラップしながら) 社員を割り当てる。
 6. 生成した当番を `status = 'pending'` で**1トランザクションにまとめて INSERT** する。
