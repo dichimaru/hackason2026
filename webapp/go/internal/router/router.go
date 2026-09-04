@@ -12,10 +12,10 @@ func New(h *handler.Handler) *gin.Engine {
 	api := r.Group("/api")
 	{
 		api.GET("/health", h.Health)
-		api.GET("/employees", h.ListEmployees)
-		api.GET("/areas", h.ListAreas)
-		api.GET("/duties", h.ListDuties)
-		api.POST("/duties/generate", h.GenerateDuties)
+		api.GET("/people", h.ListEmployees)
+		api.GET("/tasks", h.ListAreas)
+		api.GET("/lottery-results", h.ListDuties)
+		api.POST("/lottery-results/generate", h.GenerateDuties)
 	}
 	return r
 }

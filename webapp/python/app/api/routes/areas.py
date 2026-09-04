@@ -7,7 +7,7 @@ from sqlalchemy.engine import Engine
 from app.api.deps import get_engine
 from app.schemas.area import Area
 
-router = APIRouter(prefix="/areas", tags=["areas"])
+router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
 @router.get("", response_model=list[Area])

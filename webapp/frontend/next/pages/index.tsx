@@ -16,8 +16,8 @@ export default function Home() {
 
   const load = async () => {
     const [e, d] = await Promise.all([
-      fetch("/api/employees").then((r) => r.json()),
-      fetch("/api/duties").then((r) => r.json()),
+      fetch("/api/people").then((r) => r.json()),
+      fetch("/api/lottery-results").then((r) => r.json()),
     ]);
     setEmployees(e);
     setDuties(d);
@@ -29,7 +29,7 @@ export default function Home() {
   const generate = async () => {
     setBusy(true);
     try {
-      const r = await fetch("/api/duties/generate", { method: "POST" });
+      const r = await fetch("/api/lottery-results/generate", { method: "POST" });
       const j = await r.json();
       alert(`生成: ${j.created} 件`);
       await load();

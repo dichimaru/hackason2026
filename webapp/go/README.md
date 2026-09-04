@@ -48,10 +48,10 @@ cmd/server  →  router  →  handler  →  service / repository  →  domain / 
 | Method | Path                     | ハンドラ                         |
 |--------|--------------------------|----------------------------------|
 | GET    | `/api/health`            | `Handler.Health`                 |
-| GET    | `/api/employees`         | `Handler.ListEmployees`          |
-| GET    | `/api/areas`             | `Handler.ListAreas`              |
-| GET    | `/api/duties`            | `Handler.ListDuties`             |
-| POST   | `/api/duties/generate`   | `Handler.GenerateDuties`         |
+| GET    | `/api/people`                 | `Handler.ListEmployees`          |
+| GET    | `/api/tasks`                  | `Handler.ListAreas`              |
+| GET    | `/api/lottery-results`        | `Handler.ListDuties`             |
+| POST   | `/api/lottery-results/generate` | `Handler.GenerateDuties`         |
 
 ## 環境変数
 
@@ -96,7 +96,7 @@ DB_HOST=127.0.0.1 PORT=8888 go run ./cmd/server
 
 DB は `make up` で起動している MySQL (ホストの `3306`) をそのまま使える。
 `PORT` を変えているのは、`8080` が Nginx、`8081` が Adminer で埋まっているため。
-この場合フロントからは繋がらないので、`curl http://localhost:8888/api/duties` で直接叩いて確認する。
+この場合フロントからは繋がらないので、`curl http://localhost:8888/api/lottery-results` で直接叩いて確認する。
 
 なお Go をローカルに入れていない場合は、Docker 経由でビルドと静的解析ができる。
 

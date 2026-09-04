@@ -43,8 +43,8 @@ make ps          # 5サービス (db / webapp / frontend / nginx / adminer) が 
 | 確認すること | コマンド / URL | 期待する結果 |
 |--------------|----------------|--------------|
 | API が生きている | `curl http://localhost:8080/api/health` | `{"status":"ok"}` |
-| 社員データが入っている | `curl http://localhost:8080/api/employees` | 30件の JSON 配列 |
-| 当番データが入っている | `curl http://localhost:8080/api/duties` | 25件の JSON 配列 |
+| 社員データが入っている | `curl http://localhost:8080/api/people` | 30件の JSON 配列 |
+| 抽選結果データが入っている | `curl http://localhost:8080/api/lottery-results` | 25件の JSON 配列 |
 | 画面が出る | <http://localhost:8080> | 社員一覧と当番一覧が表示される |
 | DB を見られる | <http://localhost:8081> | Adminer のログイン画面 |
 
@@ -72,7 +72,7 @@ SQL を直接実行できるので、API の結果が変だと思ったらまず
 
 ```
 ブラウザ
-  │  http://localhost:8080/api/duties
+  │  http://localhost:8080/api/lottery-results
   ▼
 nginx ────────────▶ webapp (Go)                        ────────▶ db (MySQL)
   │  /api/* だけ      router → handler → service → repository
@@ -165,8 +165,8 @@ DB を触らない機能なら 2 は飛ばす。画面が不要な API だけの
 
 ## 5. ワークスルー: 当番を「実施済み」にする API を追加する
 
-現状、当番の状態 (`duties.status`) を `pending` から変える手段が無い
-(基本設計書の「制約事項 #3」)。これを解消する `PATCH /api/duties/:id` を追加する。
+現状、抽選結果の状態 (`lottery_result.status`) を `pending` から変える手段が無い
+(基本設計書の「制約事項 #3」)。これを解消する `PATCH /api/lottery-results/:id` を追加する。
 
 以下のコードは `gofmt` / `go vet` / `go build` を通したものを載せている。
 
@@ -174,7 +174,7 @@ DB を触らない機能なら 2 は飛ばす。画面が不要な API だけの
 
 | 項目 | 内容 |
 |------|------|
-| メソッド / パス | `PATCH /api/duties/:id` |
+| メソッド / パス | `PATCH /api/lottery-results/:id` |
 | リクエストボディ | `{"status": "done"}` |
 | 成功レスポンス | `200 {"id": 1, "status": "done"}` |
 | 失敗レスポンス | `400` (id や status が不正) / `404` (当番が無い) / `500` (DB エラー) |
@@ -292,18 +292,18 @@ func (h *Handler) UpdateDutyStatus(c *gin.Context) {
 make up
 
 # 1件目の当番を done にする
-curl -X PATCH http://localhost:8080/api/duties/1 \
+curl -X PATCH http://localhost:8080/api/lottery-results/1 \
   -H 'Content-Type: application/json' \
   -d '{"status":"done"}'
 # → {"id":1,"status":"done"}
 
 # 一覧に反映されているか
-curl -s http://localhost:8080/api/duties | head -c 300
+curl -s http://localhost:8080/api/lottery-results | head -c 300
 
 # 異常系も見ておく
-curl -i -X PATCH http://localhost:8080/api/duties/99999 \
+curl -i -X PATCH http://localhost:8080/api/lottery-results/99999 \
   -H 'Content-Type: application/json' -d '{"status":"done"}'   # → 404
-curl -i -X PATCH http://localhost:8080/api/duties/1 \
+curl -i -X PATCH http://localhost:8080/api/lottery-results/1 \
   -H 'Content-Type: application/json' -d '{"status":"xxx"}'     # → 400
 ```
 
@@ -313,7 +313,7 @@ curl -i -X PATCH http://localhost:8080/api/duties/1 \
 
 ```tsx
   const markDone = async (id: number) => {
-    await fetch(`/api/duties/${id}`, {
+    await fetch(`/api/lottery-results/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "done" }),
@@ -361,7 +361,7 @@ make up
 
 ### 5.8 仕上げ
 
-- **[API 仕様書](./api-spec.md) を直す。** この例なら「7.1 PATCH /api/duties/{id}」を確定仕様として
+- **[API 仕様書](./api-spec.md) を直す。** この例なら「7.1 PATCH /api/lottery-results/{id}」を確定仕様として
   「5. エンドポイント詳細」へ移し、エンドポイント一覧の状態を「確定」にする。
 - 設計書に手を入れる。この例なら基本設計書の「機能一覧」「制約事項 #3」が対象。
 - md を直したら `make docs` で xlsx を作り直す。
@@ -375,10 +375,10 @@ make up
 
 ```bash
 curl http://localhost:8080/api/health
-curl http://localhost:8080/api/employees
-curl http://localhost:8080/api/areas
-curl http://localhost:8080/api/duties
-curl -X POST http://localhost:8080/api/duties/generate
+curl http://localhost:8080/api/people
+curl http://localhost:8080/api/tasks
+curl http://localhost:8080/api/lottery-results
+curl -X POST http://localhost:8080/api/lottery-results/generate
 ```
 
 見やすくしたいときは `| python3 -m json.tool` を後ろに付ける。
@@ -401,7 +401,7 @@ docker logs -f cleaning-frontend  # Next.js
 make logs                         # 全部まとめて
 ```
 
-Gin のログには `[GIN] ... | 200 | ... | PATCH /api/duties/1` のようにステータスとパスが出る。
+Gin のログには `[GIN] ... | 200 | ... | PATCH /api/lottery-results/1` のようにステータスとパスが出る。
 **404 なら router に登録できていない、500 ならハンドラの中でエラーになっている**、という切り分けができる。
 
 ---

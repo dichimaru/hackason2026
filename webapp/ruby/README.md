@@ -46,10 +46,10 @@ webapp/ruby/
 | Method | Path                     | コントローラ                          |
 |--------|--------------------------|---------------------------------------|
 | GET    | `/api/health`            | `HealthController#show`               |
-| GET    | `/api/employees`         | `EmployeesController#index`           |
-| GET    | `/api/areas`             | `AreasController#index`               |
-| GET    | `/api/duties`            | `DutiesController#index`              |
-| POST   | `/api/duties/generate`   | `DutiesController#generate`           |
+| GET    | `/api/people`                  | `EmployeesController#index`           |
+| GET    | `/api/tasks`                   | `AreasController#index`               |
+| GET    | `/api/lottery-results`         | `DutiesController#index`              |
+| POST   | `/api/lottery-results/generate`| `DutiesController#generate`           |
 
 ルーティングは `config/routes.rb` を参照。
 

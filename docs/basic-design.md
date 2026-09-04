@@ -144,10 +144,10 @@ docker compose \
 | ID | 機能名 | 概要 | 対応 API |
 |----|--------|------|----------|
 | F-01 | ヘルスチェック | DB 接続を含む死活確認 | `GET /api/health` |
-| F-02 | 社員一覧参照 | 全社員を ID 順に取得 | `GET /api/employees` |
-| F-03 | エリア一覧参照 | 全掃除エリアを ID 順に取得 | `GET /api/areas` |
-| F-04 | 当番一覧参照 | 当番を社員名・エリア名込みで日付順に取得 | `GET /api/duties` |
-| F-05 | 当番生成 | 翌週5日分 × 全エリアの当番をランダム抽選で登録 | `POST /api/duties/generate` |
+| F-02 | 社員一覧参照 | 全社員を ID 順に取得 | `GET /api/people` |
+| F-03 | 掃除タスク一覧参照 | 全掃除タスクを ID 順に取得 | `GET /api/tasks` |
+| F-04 | 抽選結果一覧参照 | 抽選結果を社員名・掃除タスク名込みで日付順に取得 | `GET /api/lottery-results` |
+| F-05 | 抽選結果生成 | 翌週5日分 × 全掃除タスクの抽選結果を登録 | `POST /api/lottery-results/generate` |
 
 ### 3.2 当番生成ロジック (F-05)
 
@@ -179,11 +179,11 @@ docker compose \
 | 要素 | 内容 |
 |------|------|
 | 見出し | アプリ名 (実装フレームワーク名を併記) |
-| 生成ボタン | 押下で `POST /api/duties/generate` を実行。処理中は disabled、完了時に生成件数をダイアログ表示し一覧を再取得 |
+| 生成ボタン | 押下で `POST /api/lottery-results/generate` を実行。処理中は disabled、完了時に生成件数をダイアログ表示し一覧を再取得 |
 | 社員一覧 | 氏名と部署を件数付きで列挙 |
 | 当番一覧 | 「日付 / エリア / 担当 / 状態」の4列テーブル |
 
-初期表示時に `GET /api/employees` と `GET /api/duties` を並列で呼び出す。API は相対パス (`/api/...`) で呼ぶため、環境ごとのエンドポイント設定を持たない。
+初期表示時に `GET /api/people` と `GET /api/lottery-results` を並列で呼び出す。API は相対パス (`/api/...`) で呼ぶため、環境ごとのエンドポイント設定を持たない。
 
 ---
 
@@ -206,7 +206,7 @@ docker compose \
 | 200 | `{"status": "ok"}` |
 | 500 | `{"status": "ng", "error": "<エラーメッセージ>"}` |
 
-### 4.2 `GET /api/employees`
+### 4.2 `GET /api/people`
 
 社員一覧を `id` 昇順で返す (`active` による絞り込みは行わない)。
 
@@ -226,7 +226,7 @@ docker compose \
 
 エラー時は 500 / `{"error": "..."}`。
 
-### 4.3 `GET /api/areas`
+### 4.3 `GET /api/tasks`
 
 掃除エリア一覧を `id` 昇順で返す。
 
@@ -244,7 +244,7 @@ docker compose \
 
 エラー時は 500 / `{"error": "..."}`。
 
-### 4.4 `GET /api/duties`
+### 4.4 `GET /api/lottery-results`
 
 当番一覧を `scheduled_date` 昇順 → `areas.id` 昇順で返す。社員名・エリア名を JOIN 済みで含むため、フロントは追加の問い合わせを行わない。期間絞り込みのパラメータは持たず、常に全件を返す。
 
@@ -274,7 +274,7 @@ docker compose \
 
 エラー時は 500 / `{"error": "..."}`。
 
-### 4.5 `POST /api/duties/generate`
+### 4.5 `POST /api/lottery-results/generate`
 
 翌週分の当番を生成する。リクエストボディなし。
 
@@ -356,7 +356,7 @@ DB・接続文字列とも `utf8mb4` に統一する。日本語データの文�
 
 | 優先度 | 項目 | 設計上の起点 |
 |--------|------|-------------|
-| 高 | 当番状態の更新 API (`pending` → `done`) | `duties.status`。`PATCH /api/duties/:id` を追加 |
+| 高 | 抽選結果状態の更新 API (`pending` → `done`) | `lottery_result.status`。`PATCH /api/lottery-results/:id` を追加 |
 | 高 | 当番生成ロジックの改善 (営業日判定・重複防止・担当回数の平準化) | `internal/service/duty_generator.go` |
 | 中 | 交代申請機能 | `swap_requests` テーブル。`from_employee_id` / `to_employee_id` への FK 追加も併せて検討 |
 | 中 | 通知連携 (メール / Slack) | 当番生成後のフックとしてサービス層に追加 |

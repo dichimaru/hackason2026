@@ -271,8 +271,8 @@ func (h *Handler) ListAreas(c *gin.Context) {
 
 | 取りたいもの | 書き方 | 例 |
 |-------------|--------|-----|
-| パスの一部 | `c.Param("id")` | `/api/duties/:id` → `"12"` (文字列) |
-| クエリ文字列 | `c.Query("status")` | `/api/duties?status=done` |
+| パスの一部 | `c.Param("id")` | `/api/lottery-results/:id` → `"12"` (文字列) |
+| クエリ文字列 | `c.Query("status")` | `/api/lottery-results?status=done` |
 | クエリ (既定値付き) | `c.DefaultQuery("status", "pending")` | |
 | JSON ボディ | `c.ShouldBindJSON(&req)` | `{"status":"done"}` |
 

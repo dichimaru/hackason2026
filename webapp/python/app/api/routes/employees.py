@@ -7,7 +7,7 @@ from sqlalchemy.engine import Engine
 from app.api.deps import get_engine
 from app.schemas.employee import Employee
 
-router = APIRouter(prefix="/employees", tags=["employees"])
+router = APIRouter(prefix="/people", tags=["people"])
 
 
 @router.get("", response_model=list[Employee])

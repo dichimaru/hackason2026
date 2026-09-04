@@ -8,7 +8,7 @@ from app.api.deps import get_engine
 from app.schemas.duty import Duty, GenerateResult
 from app.services.duty_generator import generate_next_week
 
-router = APIRouter(prefix="/duties", tags=["duties"])
+router = APIRouter(prefix="/lottery-results", tags=["lottery-results"])
 
 
 @router.get("", response_model=list[Duty])

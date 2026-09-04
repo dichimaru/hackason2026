@@ -14,8 +14,8 @@ const busy = ref(false);
 
 const load = async () => {
   const [e, d] = await Promise.all([
-    $fetch<Employee[]>("/api/employees"),
-    $fetch<Duty[]>("/api/duties"),
+    $fetch<Employee[]>("/api/people"),
+    $fetch<Duty[]>("/api/lottery-results"),
   ]);
   employees.value = e;
   duties.value = d;
@@ -28,7 +28,7 @@ onMounted(() => {
 const generate = async () => {
   busy.value = true;
   try {
-    const r = await $fetch<{ created: number }>("/api/duties/generate", { method: "POST" });
+    const r = await $fetch<{ created: number }>("/api/lottery-results/generate", { method: "POST" });
     alert(`生成: ${r.created} 件`);
     await load();
   } finally {

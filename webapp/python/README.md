@@ -45,10 +45,10 @@ main.py  →  api/routes/*  →  schemas / services / api/deps
 | Method | Path                     | ルート                                   |
 |--------|--------------------------|------------------------------------------|
 | GET    | `/api/health`            | `app.api.routes.health.health`           |
-| GET    | `/api/employees`         | `app.api.routes.employees.list_employees`|
-| GET    | `/api/areas`             | `app.api.routes.areas.list_areas`        |
-| GET    | `/api/duties`            | `app.api.routes.duties.list_duties`      |
-| POST   | `/api/duties/generate`   | `app.api.routes.duties.post_generate`    |
+| GET    | `/api/people`                  | `app.api.routes.employees.list_employees`|
+| GET    | `/api/tasks`                   | `app.api.routes.areas.list_areas`        |
+| GET    | `/api/lottery-results`         | `app.api.routes.duties.list_duties`      |
+| POST   | `/api/lottery-results/generate`| `app.api.routes.duties.post_generate`    |
 
 レスポンスはすべて Pydantic モデルでバリデーション済み。
 

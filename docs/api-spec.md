@@ -94,8 +94,8 @@ Gin の既定動作なので、明示的に実装していない挙動も知っ�
 | リクエスト | 実際の応答 | 備考 |
 |-----------|-----------|------|
 | 存在しないパス (`GET /api/unknown`) | `404` / `text/plain` で `404 page not found` | **JSON ではない** |
-| 定義と違うメソッド (`POST /api/employees`) | `404` | 405 ではない (Gin の既定) |
-| 末尾スラッシュ付き (`GET /api/duties/`) | `301` で `/api/duties` へリダイレクト | クライアントによっては追従しない |
+| 定義と違うメソッド (`POST /api/people`) | `404` | 405 ではない (Gin の既定) |
+| 末尾スラッシュ付き (`GET /api/lottery-results/`) | `301` で `/api/lottery-results` へリダイレクト | クライアントによっては追従しない |
 
 JSON 以外が返る経路があるため、フロントは**ステータスコードを見てから body を JSON として読む**。
 
@@ -106,13 +106,13 @@ JSON 以外が返る経路があるため、フロントは**ステータスコ�
 | # | Method | Path | 概要 | 状態 |
 |---|--------|------|------|------|
 | 1 | GET | `/api/health` | ヘルスチェック | 確定 |
-| 2 | GET | `/api/employees` | 社員一覧 | 確定 |
-| 3 | GET | `/api/areas` | 掃除エリア一覧 | 確定 |
-| 4 | GET | `/api/duties` | 当番一覧 | 確定 |
-| 5 | POST | `/api/duties/generate` | 翌週分の当番を生成 | 確定 |
-| 6 | PATCH | `/api/duties/{id}` | 当番の状態を更新 (完了報告) | 検討中 |
-| 7 | POST | `/api/duties/{id}/swap-requests` | 交代申請の作成 | 検討中 |
-| 8 | PATCH | `/api/swap-requests/{id}` | 交代申請の承認・却下 | 検討中 |
+| 2 | GET | `/api/people` | 社員一覧 | 確定 |
+| 3 | GET | `/api/tasks` | 掃除タスク一覧 | 確定 |
+| 4 | GET | `/api/lottery-results` | 抽選結果一覧 | 確定 |
+| 5 | POST | `/api/lottery-results/generate` | 翌週分の抽選結果を生成 | 確定 |
+| 6 | PATCH | `/api/lottery-results/{id}` | 抽選結果の状態を更新 (完了報告) | 検討中 |
+| 7 | POST | `/api/lottery-results/{id}/skip-requests` | スキップ申請の作成 | 検討中 |
+| 8 | PATCH | `/api/skip-requests/{id}` | スキップ申請の承認・却下 | 検討中 |
 | 9 | GET | `/api/reports/summary` | 完了率・社員別回数の集計 | 検討中 |
 
 6〜9 は基本設計書「7. 拡張の方針」に対応する枠である。仕様は「7. 検討中の API」に書く。
@@ -228,7 +228,7 @@ curl http://localhost:8080/api/health
 
 ---
 
-### 5.2 GET /api/employees
+### 5.2 GET /api/people
 
 社員一覧を `id` の昇順で返す。
 
@@ -255,14 +255,14 @@ curl http://localhost:8080/api/health
 ```
 
 ```bash
-curl http://localhost:8080/api/employees
+curl http://localhost:8080/api/people
 ```
 
 未確定: 在籍者だけを返す絞り込み (`?active=true`) を入れるか。
 
 ---
 
-### 5.3 GET /api/areas
+### 5.3 GET /api/tasks
 
 掃除エリア一覧を `id` の昇順で返す。
 
@@ -287,12 +287,12 @@ curl http://localhost:8080/api/employees
 ```
 
 ```bash
-curl http://localhost:8080/api/areas
+curl http://localhost:8080/api/tasks
 ```
 
 ---
 
-### 5.4 GET /api/duties
+### 5.4 GET /api/lottery-results
 
 当番一覧を返す。社員名・エリア名を含む。
 
@@ -326,7 +326,7 @@ curl http://localhost:8080/api/areas
 ```
 
 ```bash
-curl http://localhost:8080/api/duties
+curl http://localhost:8080/api/lottery-results
 ```
 
 未確定 (設計時に決めたいこと):
@@ -337,7 +337,7 @@ curl http://localhost:8080/api/duties
 
 ---
 
-### 5.5 POST /api/duties/generate
+### 5.5 POST /api/lottery-results/generate
 
 翌週分の当番を生成して登録する。
 
@@ -373,7 +373,7 @@ curl http://localhost:8080/api/duties
 ```
 
 ```bash
-curl -X POST http://localhost:8080/api/duties/generate
+curl -X POST http://localhost:8080/api/lottery-results/generate
 ```
 
 **既知の制約** (基本設計書「6. 制約事項」と対応):
@@ -397,22 +397,22 @@ curl -X POST http://localhost:8080/api/duties/generate
 curl http://localhost:8080/api/health
 
 # 一覧取得
-curl http://localhost:8080/api/employees
-curl http://localhost:8080/api/areas
-curl http://localhost:8080/api/duties
+curl http://localhost:8080/api/people
+curl http://localhost:8080/api/tasks
+curl http://localhost:8080/api/lottery-results
 
 # 当番生成
-curl -X POST http://localhost:8080/api/duties/generate
+curl -X POST http://localhost:8080/api/lottery-results/generate
 
 # 見やすく整形する
-curl -s http://localhost:8080/api/duties | python3 -m json.tool
+curl -s http://localhost:8080/api/lottery-results | python3 -m json.tool
 ```
 
 PowerShell では `curl` の代わりに `Invoke-RestMethod` を使う。
 
 ```powershell
-Invoke-RestMethod http://localhost:8080/api/duties
-Invoke-RestMethod -Method Post http://localhost:8080/api/duties/generate
+Invoke-RestMethod http://localhost:8080/api/lottery-results
+Invoke-RestMethod -Method Post http://localhost:8080/api/lottery-results/generate
 ```
 
 ---
@@ -421,7 +421,7 @@ Invoke-RestMethod -Method Post http://localhost:8080/api/duties/generate
 
 以下は枠だけ用意したもの。**実装されていない。** 決まった内容をここに書いてから実装する。
 
-### 7.1 PATCH /api/duties/{id} — 当番の状態更新
+### 7.1 PATCH /api/lottery-results/{id} — 抽選結果の状態更新
 
 | 項目 | 内容 |
 |------|------|
@@ -456,7 +456,7 @@ Invoke-RestMethod -Method Post http://localhost:8080/api/duties/generate
 | 完了日時を記録するか | 記録するなら `duties` に `done_at` 列の追加が必要 |
 | 応答に更新後の Duty 全体を返すか | `{"id","status"}` だけか、[Duty](#43-duty-当番) 全体か |
 
-### 7.2 POST /api/duties/{id}/swap-requests — 交代申請の作成
+### 7.2 POST /api/lottery-results/{id}/skip-requests — スキップ申請の作成
 
 | 項目 | 内容 |
 |------|------|
@@ -482,7 +482,7 @@ Invoke-RestMethod -Method Post http://localhost:8080/api/duties/generate
 | 同じ当番への重複申請 | 許す / 承認待ちが1件でもあれば 409 |
 | 相手の承認が必要か | 相手の承認のみ / 管理者の承認も必要 |
 
-### 7.3 PATCH /api/swap-requests/{id} — 交代申請の承認・却下
+### 7.3 PATCH /api/skip-requests/{id} — スキップ申請の承認・却下
 
 | 項目 | 内容 |
 |------|------|
@@ -516,7 +516,7 @@ Invoke-RestMethod -Method Post http://localhost:8080/api/duties/generate
 | # | 論点 | 現状 | 決めたいこと |
 |---|------|------|-------------|
 | 1 | 認証・認可 | なし | 導入するか。する場合の方式 (社内SSO / OIDC)、リクエストへの載せ方 (`Authorization` ヘッダ)、401/403 の返し方 |
-| 2 | 「自分の当番」の取得 | 不可能 (利用者を特定できない) | 認証と合わせて決める。`GET /api/duties/me` を作るか |
+| 2 | 「自分の抽選結果」の取得 | 不可能 (利用者を特定できない) | 認証と合わせて決める。`GET /api/lottery-results/me` を作るか |
 | 3 | エラー形式 | `{"error": "英語メッセージ"}` | エラーコードを持たせるか、メッセージを日本語にするか |
 | 4 | ページング | なし | 方式 (`limit`/`offset` か cursor)、既定件数、レスポンス構造の変更 |
 | 5 | API バージョニング | なし (`/api/...`) | `/api/v1/...` にするか |
