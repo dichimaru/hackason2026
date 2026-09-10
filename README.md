@@ -16,6 +16,13 @@ ISUCON14 風に **Docker Compose で一発起動** できるよう構成して�
 
 - Figma: [掃除当番抽選アプリ](https://www.figma.com/design/e32i2DHHXEFeU8X15bmHbX/%E6%8E%83%E9%99%A4%E5%BD%93%E7%95%AA%E6%8A%BD%E9%81%B8%E3%82%A2%E3%83%97%E3%83%AA?node-id=0-1&m=dev&t=FIzCNAGSJpc7yaOB-1)
 
+### Figma MCP
+
+リポジトリ直下の `.mcp.json` に Figma のリモート MCP サーバーを登録しています。
+Copilot CLI で初回のみ `/mcp` から `figma` を認証し、次の選択画面 URL をプロンプトに貼り付けてください。
+
+- [選択画面 (node-id=36-1554)](https://www.figma.com/design/e32i2DHHXEFeU8X15bmHbX/%E6%8E%83%E9%99%A4%E5%BD%93%E7%95%AA%E6%8A%BD%E9%81%B8%E3%82%A2%E3%83%97%E3%83%AA?node-id=36-1554&t=2VgorcX2W0CNRB6x-1)
+
 ## 設計ドキュメント
 
 | ドキュメント | 編集用 (こちらが正) | 閲覧用 |
@@ -102,7 +109,7 @@ MySQL コンテナの `/docker-entrypoint-initdb.d` にマウントされ初回�
 
 #### バックエンド (3言語)
 
-すべて `/api/health` `/api/employees` `/api/areas` `/api/duties` `/api/duties/generate` を公開。各言語でWeb フレームワークを採用し、それぞれの**標準的なフォルダ構成**に合わせています。詳細は各 README を参照。
+すべて `/api/health` `/api/people` `/api/tasks` `/api/lottery-results` `/api/lottery-results/generate` を公開。各言語でWeb フレームワークを採用し、それぞれの**標準的なフォルダ構成**に合わせています。詳細は各 README を参照。
 
 ```
 webapp/go/                            # Gin + GORM  → webapp/go/README.md
@@ -205,10 +212,10 @@ webapp/frontend/svelte/               # SvelteKit
 | Method | Path                     | 説明                          |
 |--------|--------------------------|-------------------------------|
 | GET    | `/api/health`            | ヘルスチェック                |
-| GET    | `/api/employees`         | 社員一覧                      |
-| GET    | `/api/areas`             | 掃除エリア一覧                |
-| GET    | `/api/duties`            | 当番一覧 (社員名・エリア名込み) |
-| POST   | `/api/duties/generate`   | 翌週5日分の当番をランダム生成 |
+| GET    | `/api/people`                  | 社員一覧                              |
+| GET    | `/api/tasks`                   | 掃除タスク一覧                        |
+| GET    | `/api/lottery-results`         | 抽選結果一覧 (社員名・タスク名込み)   |
+| POST   | `/api/lottery-results/generate`| 翌週5日分の抽選結果をランダム生成      |
 
 ## セットアップ
 
@@ -304,8 +311,8 @@ API も直接叩けます (PowerShell では `curl` の代わりに `Invoke-Rest
 
 ```bash
 curl http://localhost:8080/api/health
-curl http://localhost:8080/api/employees
-curl -X POST http://localhost:8080/api/duties/generate
+curl http://localhost:8080/api/people
+curl -X POST http://localhost:8080/api/lottery-results/generate
 ```
 
 ### 4. 日常操作
@@ -379,7 +386,7 @@ docker compose -f development/compose-base.yml \
   各 compose ファイルで `webapp` / `frontend` という名前のサービスを差し込む構造。
 - **DB初期化**: MySQL公式イメージの `/docker-entrypoint-initdb.d` に `webapp/sql/*.sql` を
   マウントしているので、`make seed` (volume削除 → 再up) で簡単に初期化できる。
-- **生成ロジック**: `/api/duties/generate` は社員リストをシャッフルしてから
+- **生成ロジック**: `/api/lottery-results/generate` は社員リストをシャッフルしてから
   5営業日 × 全エリアに割り当てるシンプルなラウンドロビン。
   公平性の強化やスケジュール連携はここを起点に拡張。
 
