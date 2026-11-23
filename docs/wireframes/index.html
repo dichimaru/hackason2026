@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掃除当番アプリ ワイヤーフレーム</title>
+<style>
+:root{--ink:#1f2024;--mute:#73757d;--line:#cfd1d6;--bg:#f4f4f6;--acc:#2563eb;--accbg:#e6edff;--ok:#17803f;--okbg:#e1f7e8;--warn:#a86a05;--warnbg:#fff3d1;--ng:#bf2626;--ngbg:#ffe5e5}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.6 "Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:var(--bg)}
+header.top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+header.top b{font-size:15px}
+header.top a{color:var(--mute);text-decoration:none;font-size:13px}
+header.top a:hover{color:var(--acc)}
+main{max-width:1040px;margin:0 auto;padding:24px 16px 80px}
+section{margin:0 0 56px}
+h2{font-size:16px;margin:0 0 4px}
+p.cap{margin:0 0 12px;color:var(--mute);font-size:12px}
+.frame{background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.mobile{max-width:375px}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;border-bottom:1px solid var(--line)}
+.hdr nav{display:flex;gap:20px;color:var(--mute);font-size:13px;align-items:center}
+.hdr nav b{color:var(--ink);font-size:15px}
+.hdr nav .on{color:var(--acc);font-weight:700}
+.body{padding:24px;display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.row.sp{justify-content:space-between}
+.row.end{justify-content:flex-end}
+h3{margin:0;font-size:18px}
+h4{margin:0;font-size:14px}
+.mute{color:var(--mute);font-size:12px}
+.btn{display:inline-block;padding:7px 16px;border-radius:6px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:13px;color:var(--ink)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.d{border-color:var(--ng);color:var(--ng)}
+.chip{padding:3px 12px;border-radius:14px;border:1px solid var(--line);font-size:13px;color:var(--mute);background:#fff}
+.chip.on{background:var(--accbg);border-color:var(--acc);color:var(--acc)}
+.badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:700;background:var(--bg);color:var(--mute);white-space:nowrap}
+.badge.blue{background:var(--accbg);color:var(--acc)}.badge.green{background:var(--okbg);color:var(--ok)}.badge.orange{background:var(--warnbg);color:var(--warn)}.badge.red{background:var(--ngbg);color:var(--ng)}
+table{width:100%;border-collapse:collapse;border:1px solid var(--line);font-size:14px}
+th{background:var(--bg);color:var(--mute);font-size:12px;text-align:left;padding:9px 12px}
+td{padding:9px 12px;border-top:1px solid var(--line)}
+.box{border:1px solid var(--line);border-radius:8px;padding:14px}
+.box.gray{background:var(--bg)}.box.warn{background:var(--warnbg);border-color:var(--warnbg);color:var(--warn)}.box.ok{background:var(--okbg);border-color:var(--okbg)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fld{border:1px solid var(--line);border-radius:6px;padding:6px 10px;background:#fff;min-width:100px;display:inline-block;font-size:13px}
+.lbl{font-size:12px;color:var(--mute);margin-bottom:2px}
+.link{color:var(--acc)}.del{color:var(--ng)}
+.teams{display:flex;flex-direction:column;gap:14px;background:var(--bg);padding:20px;max-width:460px;border:1px solid var(--line);border-radius:4px}
+.teams .kind{font-size:11px;color:var(--mute)}
+.teams .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.winrow{display:flex;gap:12px;padding:4px 0}.winrow .tool{width:200px;color:var(--mute);font-size:13px}.winrow .who{font-weight:700;width:220px}.winrow .pt{color:var(--mute);font-size:13px}
+@media(max-width:700px){.grid3{grid-template-columns:1fr}.body{padding:16px}}
+</style>
+</head>
+<body>
+<header class="top"><b>掃除当番アプリ ワイヤーフレーム</b>
+<a href="#w0-1">W0 ログイン・パスワード変更</a><a href="#crud">CRUD 一覧</a><a href="#w1">W1 回一覧</a><a href="#w2">W2 回答完了</a><a href="#w3">W3 臨時の回</a><a href="#w4">W4 回の詳細</a><a href="#w4-2">W4-2 中止の確認</a><a href="#w6">W6 当番履歴</a><a href="#w7">W7 社員</a><a href="#w7-1">W7-1〜2 社員の追加・編集</a><a href="#w8">W8 掃除道具</a><a href="#w8-1">W8-1〜2 道具の追加・編集</a><a href="#w9">W9 自動作成設定</a><a href="#w10">W10 当選結果</a><a href="#teams">Teams 通知</a></header>
+<main>
+<p class="mute">各画面の項目とテーブルの列の対応は docs/for-ai/05_screens.md を参照。サンプルの名前・道具・数値はすべて例。</p>
+
+<section id="w0-1"><h2>W0-1. 管理者ログイン</h2><p class="cap">管理者ごとの ID/パスワード。5回続けて失敗すると15分ロック。失敗時は ID が存在するかを教えない。</p>
+<div class="frame" style="max-width:420px"><div class="body"><h3>管理者ログイン</h3>
+<div><div class="lbl">ログイン ID</div><span class="fld" style="min-width:300px">&nbsp;</span></div>
+<div><div class="lbl">パスワード</div><span class="fld" style="min-width:300px">&nbsp;</span></div>
+<span class="btn p" style="text-align:center">ログイン</span>
+<p class="mute" style="margin:0">失敗: 「ID またはパスワードが違います」 / ロック中: 「しばらくしてからお試しください」</p></div></div></section>
+
+<section id="w0-2"><h2>W0-2. パスワード変更 (管理者)</h2><p class="cap">一時パスワードでログインしたときは、この画面で変更するまで他の画面に進めない。変更すると他のセッションはログアウトされる。</p>
+<div class="frame" style="max-width:420px"><div class="body"><h3>パスワード変更</h3>
+<div><div class="lbl">現在のパスワード</div><span class="fld" style="min-width:300px">&nbsp;</span></div>
+<div><div class="lbl">新しいパスワード (12文字以上。ID と同じものは不可)</div><span class="fld" style="min-width:300px">&nbsp;</span></div>
+<div><div class="lbl">新しいパスワード (確認)</div><span class="fld" style="min-width:300px">&nbsp;</span></div>
+<div class="row end"><span class="btn p">変更</span></div></div></div></section>
+
+<section id="crud"><h2>管理画面の CRUD 一覧</h2><p class="cap">削除は、出欠・当番から参照されている行は消せないため、下の「削除の扱い」で代える。</p>
+<table><tr><th>対象 (テーブル)</th><th>一覧・参照 (R)</th><th>作成 (C)</th><th>更新 (U)</th><th>削除 (D)</th></tr>
+<tr><td>回 (cleaning_events)</td><td>W1 回一覧 / W4 回の詳細</td><td>自動作成 / W3 臨時の回の作成</td><td>なし</td><td>W4-2 中止 (status=cancelled。出欠が参照するため行は消さない)</td></tr>
+<tr><td>管理者 (admin_accounts)</td><td>W7 の「管理者」バッジ</td><td>W7-2 で管理者にする (ID と一時パスワード)</td><td>W0-2 パスワード変更</td><td>W7-2 で管理者から外す (最後の1人は不可)</td></tr>
+<tr><td>社員 (employees)</td><td>W7 社員一覧</td><td>W7-1 社員の追加</td><td>W7-2 社員の編集</td><td>W7-2 の休止 (active=0)。行は消さない</td></tr>
+<tr><td>掃除道具 (tools)</td><td>W8 掃除道具一覧</td><td>W8-1 道具の追加</td><td>W8-2 道具の編集 (在庫数の更新を含む)</td><td>在庫 0 にする (当番を割り当てない)。行は消さない</td></tr>
+<tr><td>自動作成の設定 (schedule_settings)</td><td colspan="2">W9 (1行のみ。作成は初期データ)</td><td>W9</td><td>なし (1行固定)</td></tr>
+<tr><td>当番 (duties)</td><td>W4 / W6 / W10</td><td>抽選で作成</td><td colspan="2">なし (決まった後は変えない)</td></tr>
+<tr><td>出欠 (attendances)</td><td>W4</td><td>回の作成時に作成</td><td>社員が DM のリンクで回答 (W2)</td><td>なし</td></tr>
+<tr><td>エリア (areas)</td><td colspan="4">大阪・東京の固定。画面なし</td></tr></table></section>
+
+<section id="w1"><h2>W1. 回一覧 (管理者)</h2><p class="cap">回はエリアごと。毎週、東京の回と大阪の回が自動で作られる。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span class="on">回一覧</span><span>当番履歴</span><span>社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row sp"><h3>掃除当番の回</h3><span class="btn">＋ 臨時の回を作成</span></div>
+<table><tr><th>日付</th><th>エリア</th><th>作成</th><th>状態</th><th>出席/全員</th><th>出欠締切</th></tr>
+<tr><td>12/04(金)</td><td>東京</td><td><span class="badge">自動</span></td><td><span class="badge blue">回答受付</span></td><td>15/20</td><td>12/04 13:00</td></tr>
+<tr><td>12/04(金)</td><td>大阪</td><td><span class="badge">自動</span></td><td><span class="badge blue">回答受付</span></td><td>7/10</td><td>12/04 13:00</td></tr>
+<tr><td>11/27(金)</td><td>東京</td><td><span class="badge">自動</span></td><td><span class="badge orange">抽選済み</span></td><td>15/20</td><td>11/27 13:00</td></tr>
+<tr><td>11/27(金)</td><td>大阪</td><td><span class="badge">自動</span></td><td><span class="badge orange">抽選済み</span></td><td>10/10</td><td>11/27 13:00</td></tr>
+<tr><td>11/13(金)</td><td>東京</td><td><span class="badge">自動</span></td><td><span class="badge red">中止</span></td><td>-</td><td>-</td></tr>
+<tr><td>12/13(日)</td><td>東京</td><td><span class="badge">臨時</span></td><td><span class="badge blue">回答受付</span></td><td>0/20</td><td>12/13 13:00</td></tr></table>
+<p class="mute">行をクリックで W4 回の詳細へ。</p></div></div></section>
+
+<section id="w2"><h2>W2. 回答完了ページ (社員 / スマホ)</h2><p class="cap">回答用の画面は無い。DM の「出席する」「欠席する」リンクをクリックした時点で記録され、このページが開く。</p>
+<div class="row" style="align-items:flex-start;gap:24px">
+<div class="frame mobile"><div class="body"><h3>12/04(金) 東京 掃除当番</h3><div><span class="badge green">出席で回答しました ✔</span></div><div>山田 太郎 さん<br><span class="mute">回答日時 12/04(金) 10:21</span></div><p class="mute" style="margin:0">締切(13:00)までは、DM のもう一方のリンクで変更できます。</p></div></div>
+<div class="box gray" style="max-width:420px"><h4>同じページで出すメッセージ</h4><ul class="mute" style="padding-left:18px;margin:6px 0 0"><li>欠席: 「欠席で回答しました」</li><li>締切後: 「回答は締め切られました」(記録しない)</li><li>前回の当選者: 「前回の当番のため、今回は抽選対象外です」</li></ul></div></div></section>
+
+<section id="w3"><h2>W3. 臨時の回の作成 (管理者)</h2><p class="cap">通常の回は毎週自動で作成される。臨時の回を足すための画面。作成と同時に出欠 DM を送る。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span class="on">回一覧</span><span>当番履歴</span><span>社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row"><span class="mute">← 回一覧</span><h3>臨時の回を作成</h3></div>
+<div><div class="lbl">エリア</div>◉ 東京　○ 大阪　<span class="mute">当番 6名 (在庫がある道具の必要人数の合計。ここでは変えない)</span></div>
+<div class="row"><div><div class="lbl">掃除日</div><span class="fld">2026-12-13 (日)</span></div><div><div class="lbl">開始時刻</div><span class="fld">16:00</span></div></div>
+<div class="row"><div><div class="lbl">リマインド</div><span class="fld">12/13 11:00</span></div><div><div class="lbl">出欠締切</div><span class="fld">12/13 13:00</span></div><div><div class="lbl">抽選</div><span class="fld">12/13 13:05</span></div></div>
+<div class="row end"><span class="btn p">作成して出欠 DM を送る</span></div></div></div></section>
+
+<section id="w4"><h2>W4. 回の詳細 (管理者)</h2>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span class="on">回一覧</span><span>当番履歴</span><span>社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row"><span class="mute">← 回一覧</span><h3>12/04(金) 東京</h3><span class="badge blue">回答受付</span><span class="mute">締切まで あと 2時間 / 13:05 に自動抽選</span></div>
+<div class="box">出席 15 / 欠席 2 / 未回答 3　<span class="mute">当番 6名</span></div>
+<div class="box gray"><b>抽選の対象</b>: 出席 15 − 前回当選 6 = 9 / 当番 6名<br><span style="color:var(--warn);font-size:12px">⚠ 対象が当番人数より少ない場合は、前回当選者から補充します(連続当番)</span></div>
+<div class="row"><span class="chip on">すべて</span><span class="chip">出席</span><span class="chip">欠席</span><span class="chip">未回答</span></div>
+<table><tr><th>氏名</th><th>回答</th><th>抽選</th></tr>
+<tr><td>山田 太郎</td><td><span class="badge green">出席</span></td><td style="color:var(--ok);font-weight:700">対象</td></tr>
+<tr><td>佐藤 花子</td><td><span class="badge green">出席</span></td><td style="color:var(--ng)">除外 (前回 11/27 に当選)</td></tr>
+<tr><td>小林 誠</td><td><span class="badge">未回答</span></td><td class="mute">-</td></tr></table>
+<div class="box"><b>抽選後の表示</b><br>掃除機: 山田 太郎 / 鈴木 一郎　アルコールスプレー: 渡辺 桜　スポンジ: 小林 誠 / 加藤 舞　トイレブラシ: 吉田 健<br><span class="mute">連続当番がいれば <span class="badge orange">連続当番</span> を付ける</span></div>
+<div class="row end"><span class="btn d">この回を中止する (W4-2)</span></div></div></div></section>
+
+<section id="w4-2"><h2>W4-2. 中止の確認 (管理者 / ダイアログ)</h2><p class="cap">回の削除の代わり。受付中(open)の回だけ中止できる。中止すると、未送信の通知(リマインド・結果)は送らない。</p>
+<div class="frame" style="max-width:420px"><div class="body"><h4>12/04(金) 東京 の回を中止しますか?</h4><p class="mute" style="margin:0">出欠の受付と抽選を止めます。送信済みの出欠 DM は取り消せません。中止した回は元に戻せません。</p><div class="row end"><span class="btn">やめる</span><span class="btn d">中止する</span></div></div></div></section>
+
+<section id="w6"><h2>W6. 当番履歴 (管理者)</h2>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span class="on">当番履歴</span><span>社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><h3>当番履歴</h3>
+<div class="box warn"><b>前回の当選者 = 次回の抽選から除外される人</b><br>東京 (11/27): 佐藤 花子 / 田中 次郎 / 中島 樹 / 石井 葵 / 森 直樹 / 阿部 美月<br>大阪 (11/27): 高橋 美咲 / 伊藤 健</div>
+<div class="row"><span class="mute">絞り込み</span><span class="chip">エリア ▾</span><span class="chip">社員 ▾</span><span class="chip">期間 ▾</span></div>
+<table><tr><th>日付</th><th>エリア</th><th>掃除道具</th><th>当番</th></tr>
+<tr><td>11/27</td><td>東京</td><td>アルコールスプレー</td><td>佐藤 花子</td></tr>
+<tr><td>11/27</td><td>東京</td><td>掃除機</td><td>田中 次郎</td></tr>
+<tr><td>11/27</td><td>大阪</td><td>雑巾</td><td>高橋 美咲</td></tr>
+<tr><td>11/20</td><td>東京</td><td>掃除機</td><td>山田 太郎 <span class="badge orange">連続当番</span></td></tr></table></div></div></section>
+
+<section id="w7"><h2>W7. 社員管理 (管理者)</h2>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span class="on">社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row sp"><h3>社員管理</h3><span class="row"><span class="btn p">＋ 社員を追加 (W7-1)</span></span></div>
+<div class="row"><span class="chip on">すべて</span><span class="chip">東京</span><span class="chip">大阪</span><span class="fld" style="color:var(--mute)">名前で検索</span></div>
+<table><tr><th>氏名</th><th>エリア</th><th>部署</th><th>Teams UPN</th><th>状態</th><th>操作</th></tr>
+<tr><td>山田 太郎 <span class="badge blue">管理者</span></td><td>東京</td><td>開発</td><td class="mute">yamada@contoso.onmicrosoft.com</td><td><span class="badge green">有効</span></td><td><span class="link">編集 (W7-2)</span></td></tr>
+<tr><td>佐藤 花子</td><td>東京</td><td>営業</td><td><span class="badge orange">未登録</span></td><td><span class="badge green">有効</span></td><td><span class="link">編集</span></td></tr>
+<tr><td>鈴木 一郎</td><td>大阪</td><td>総務</td><td class="mute">suzuki@contoso.onmicrosoft.com</td><td><span class="badge">休止</span></td><td><span class="link">編集</span></td></tr></table>
+<p class="mute">※ UPN 未登録の社員には DM を送れません。休止中の社員は出欠・抽選の対象外です。削除はせず休止にします。</p></div></div></section>
+
+<section id="w7-1"><h2>W7-1. 社員の追加 (管理者)</h2><p class="cap">追加した社員は、次に作られる回から出欠 DM・抽選の対象になる(作成済みの回には入らない)。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span class="on">社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row"><span class="mute">← 社員管理</span><h3>社員の追加</h3></div>
+<div class="row"><div><div class="lbl">氏名 (必須)</div><span class="fld" style="min-width:200px"></span></div><div><div class="lbl">部署 (必須)</div><span class="fld"></span></div></div>
+<div><div class="lbl">エリア (必須)</div>○ 東京　○ 大阪</div>
+<div><div class="lbl">Teams UPN (空欄可。空欄の社員には DM を送れない)</div><span class="fld" style="min-width:320px"></span></div>
+
+<div class="row end"><span class="btn">キャンセル</span><span class="btn p">保存</span></div></div></div>
+<p class="mute">入力チェック: UPN は他の社員と重複不可。</p></section>
+
+<section id="w7-2"><h2>W7-2. 社員の編集 (管理者)</h2><p class="cap">エリアや状態の変更は、次に作られる回から反映する(作成済みの回の出欠はそのまま)。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span class="on">社員</span><span>掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row"><span class="mute">← 社員管理</span><h3>社員の編集 山田 太郎</h3></div>
+<div class="row"><div><div class="lbl">氏名 (必須)</div><span class="fld" style="min-width:200px">山田 太郎</span></div><div><div class="lbl">部署 (必須)</div><span class="fld">開発</span></div></div>
+<div><div class="lbl">エリア (必須)</div>◉ 東京　○ 大阪</div>
+<div><div class="lbl">Teams UPN (空欄可。空欄の社員には DM を送れない)</div><span class="fld" style="min-width:320px">yamada@contoso.onmicrosoft.com</span></div>
+<div><div class="lbl">状態</div>◉ 有効　○ 休止 <span class="mute">(休止中は出欠 DM・抽選の対象外。辞めた人は休止にする。休止にすると管理者のセッションも消える)</span></div>
+<div class="box gray"><div class="lbl">管理者</div><span class="badge blue">管理者</span> ログイン ID: yamada　<span class="btn d">管理者から外す</span> <span class="mute">最後の1人は外せない</span><br><span class="mute">管理者でない社員の場合: [ ] 管理者にする → ログイン ID と一時パスワードを設定 (次回ログイン時に変更必須)</span></div>
+<div class="row end"><span class="btn">キャンセル</span><span class="btn p">保存</span></div></div></div>
+</section>
+
+<section id="w8"><h2>W8. 掃除道具管理 (管理者)</h2><p class="cap">担当の単位は掃除道具。道具ごとに必要人数と在庫数を登録する。在庫 0 の道具には当番を割り当てない。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span>社員</span><span class="on">掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row sp"><h3>掃除道具管理</h3><span class="btn p">＋ 掃除道具を追加 (W8-1)</span></div>
+<h4>【東京】 当番人数 合計 6名</h4>
+<table><tr><th>掃除道具</th><th>必要人数</th><th>在庫</th><th>ポイント</th><th>操作</th></tr>
+<tr><td><b>掃除機</b></td><td>2名</td><td>2台</td><td class="mute">床全体に掃除機をかける</td><td><span class="link">編集 (W8-2)</span></td></tr>
+<tr><td><b>アルコールスプレー</b></td><td>1名</td><td>3本</td><td class="mute">テーブルをアルコールで拭く / ホワイトボードをきれいにする</td><td><span class="link">編集</span></td></tr>
+<tr><td><b>スポンジ</b></td><td>2名</td><td>4個</td><td class="mute">シンクを磨く / 電子レンジの中を拭く</td><td><span class="link">編集</span></td></tr>
+<tr><td><b>トイレブラシ</b></td><td>1名</td><td>1本</td><td class="mute">便器を磨く / 手洗い場を清掃する</td><td><span class="link">編集</span></td></tr>
+<tr><td><b>ほうき</b></td><td>1名</td><td style="color:var(--ng);font-weight:700">0本</td><td class="mute">入口を掃く <span class="badge red">在庫切れ: 当番を割り当てない</span></td><td><span class="link">編集</span></td></tr></table>
+<h4>【大阪】 当番人数 合計 2名</h4>
+<table><tr><th>掃除道具</th><th>必要人数</th><th>在庫</th><th>ポイント</th><th>操作</th></tr>
+<tr><td><b>雑巾</b></td><td>2名</td><td>5枚</td><td class="mute">机を拭く</td><td><span class="link">編集</span></td></tr></table></div></div></section>
+
+<section id="w8-1"><h2>W8-1. 掃除道具の追加 (管理者)</h2><p class="cap">追加した道具は、次の抽選から当番の割り当てに使う。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span>社員</span><span class="on">掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row"><span class="mute">← 掃除道具管理</span><h3>掃除道具の追加</h3></div>
+<div><div class="lbl">エリア (必須)</div>○ 東京　○ 大阪</div>
+<div><div class="lbl">掃除道具名 (必須。同じエリアで重複不可)</div><span class="fld" style="min-width:240px"></span></div>
+<div class="row"><div><div class="lbl">必要人数 (必須。1以上)</div><span class="fld"></span> 名</div><div><div class="lbl">在庫数 (必須。0 なら当番を割り当てない)</div><span class="fld"></span></div></div>
+<div><div class="lbl">掃除のポイント (複数行可。W10 に表示)</div><span class="fld" style="min-width:420px;min-height:60px"></span></div>
+
+<div class="row end"><span class="btn">キャンセル</span><span class="btn p">保存</span></div></div></div></section>
+
+<section id="w8-2"><h2>W8-2. 掃除道具の編集 (管理者)</h2><p class="cap">在庫数の更新もここで行う。エリアは変えられない(過去の当番がこの道具のエリアで記録されているため)。変更は次の抽選から反映する。</p>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span>社員</span><span class="on">掃除道具</span><span>自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><div class="row"><span class="mute">← 掃除道具管理</span><h3>掃除道具の編集 掃除機</h3></div>
+<div><div class="lbl">エリア (変更不可)</div>東京</div>
+<div><div class="lbl">掃除道具名 (必須。同じエリアで重複不可)</div><span class="fld" style="min-width:240px">掃除機</span></div>
+<div class="row"><div><div class="lbl">必要人数 (必須。1以上)</div><span class="fld">2</span> 名</div><div><div class="lbl">在庫数 (必須。0 なら当番を割り当てない)</div><span class="fld">2</span></div></div>
+<div><div class="lbl">掃除のポイント (複数行可。W10 に表示)</div><span class="fld" style="min-width:420px;min-height:60px">床全体に掃除機をかける</span></div>
+
+<div class="row end"><span class="btn">キャンセル</span><span class="btn p">保存</span></div></div></div></section>
+
+<section id="w9"><h2>W9. 自動作成の設定 (管理者)</h2>
+<div class="frame"><div class="hdr"><nav><b>掃除当番アプリ</b><span>回一覧</span><span>当番履歴</span><span>社員</span><span>掃除道具</span><span class="on">自動作成の設定</span></nav><span class="mute">山田 太郎 (管理者)　<span class="link">パスワード変更</span>　<span class="link">ログアウト</span></span></div>
+<div class="body"><h3>自動作成の設定</h3>
+<div class="row"><span class="mute">掃除の曜日</span><span class="fld">金曜 ▾</span><span class="mute">開始時刻</span><span class="fld">16:00</span></div>
+<h4>時刻 (すべて掃除当日。上から順に、開始時刻より前)</h4>
+<table style="max-width:460px"><tr><td>回の作成 + 出欠 DM</td><td><span class="fld">09:00</span></td></tr><tr><td>未回答者リマインド</td><td><span class="fld">11:00</span></td></tr><tr><td>出欠の締切</td><td><span class="fld">13:00</span></td></tr><tr><td>抽選 + 結果投稿</td><td><span class="fld">13:05</span></td></tr></table>
+<span class="mute">次回の自動作成: 12/04(金) 09:00 (東京の回・大阪の回)</span>
+<div class="row end"><span class="btn p">保存</span></div></div></div></section>
+
+<section id="w10"><h2>W10. 当選結果画面 (誰でも / ログイン不要・スマホ)</h2><p class="cap">Teams のチャネルに回ごとに投稿する URL の先。その回(東京の回 / 大阪の回)の当番を、掃除道具ごとのカードで表示する(元の Figma の結果画面の構成)。</p>
+<div class="frame mobile"><div class="body" style="text-align:left"><h3 style="text-align:center">今週の掃除当番はこちら!</h3><p class="mute" style="margin:0;text-align:center">12/04(金) 東京 16:00〜</p>
+<div class="box"><div class="row"><span class="badge blue">A</span><span class="mute">掃除機 担当</span></div>
+<div style="font-weight:700;margin:6px 0">山田 太郎 さん　鈴木 一郎 さん</div>
+<div class="row" style="align-items:flex-start;gap:24px"><div><div class="lbl">掃除のポイント</div>床全体に掃除機をかける</div><div><div class="lbl">使う道具</div>掃除機　2台</div></div></div>
+<div class="box"><div class="row"><span class="badge blue">B</span><span class="mute">アルコールスプレー 担当</span></div>
+<div style="font-weight:700;margin:6px 0">渡辺 桜 さん</div>
+<div class="row" style="align-items:flex-start;gap:24px"><div><div class="lbl">掃除のポイント</div>テーブルをアルコールで拭く<br>ホワイトボードをきれいにする</div><div><div class="lbl">使う道具</div>アルコールスプレー　3本</div></div></div>
+<div class="box"><div class="row"><span class="badge blue">C</span><span class="mute">スポンジ 担当</span></div>
+<div style="font-weight:700;margin:6px 0">小林 誠 さん　加藤 舞 さん</div>
+<div class="row" style="align-items:flex-start;gap:24px"><div><div class="lbl">掃除のポイント</div>シンクを磨く<br>電子レンジの中を拭く</div><div><div class="lbl">使う道具</div>スポンジ　4個</div></div></div>
+<div class="box"><div class="row"><span class="badge blue">D</span><span class="mute">トイレブラシ 担当</span></div>
+<div style="font-weight:700;margin:6px 0">吉田 健 さん</div>
+<div class="row" style="align-items:flex-start;gap:24px"><div><div class="lbl">掃除のポイント</div>便器を磨く<br>手洗い場を清掃する</div><div><div class="lbl">使う道具</div>トイレブラシ　1本</div></div></div>
+<p class="mute" style="margin:0;text-align:center">当番のみなさん、今週の掃除をよろしくお願いします!</p>
+<div style="text-align:center"><span class="btn p">結果を共有 (URL をコピー)</span></div>
+<p class="mute" style="margin:0">抽選前の回は「13:05 に抽選します」、中止の回は「中止」、出席者がいない回は「出席者がいません」と表示。</p></div></div></section>
+
+<section id="teams"><h2>Teams に届く通知</h2><p class="cap">①② は個人宛の DM、③ はチャネル。出欠はリンクをクリックするだけで記録される。</p>
+<div class="teams">
+<div class="card"><span class="kind">① 出欠のお願い (DM / 個人別リンク 09:00)</span><b>12/04(金) 東京 掃除当番の出欠をお願いします</b><span class="mute">掃除日 12/04(金) 16:00 / 締切 13:00</span><div class="row"><span class="btn p">出席する</span><span class="btn">欠席する</span></div><span class="mute">クリックで回答が記録されます (締切まで変更可)</span></div>
+<div class="card"><span class="kind">② リマインド (DM / 未回答者のみ 11:00)</span><b>出欠のご回答がまだです</b><span class="mute">締切 (13:00) まであと 2時間です</span><div class="row"><span class="btn p">出席する</span><span class="btn">欠席する</span></div></div>
+<div class="card"><span class="kind">③ 結果 (チャネル投稿 13:05 / 回ごと / 当選結果画面 W10 への URL だけ)</span><b>12/04(金) 東京の掃除当番が決まりました</b><span class="link">https://&lt;app&gt;/results/&lt;回の public_token&gt;</span></div>
+</div></section>
+</main></body></html>
